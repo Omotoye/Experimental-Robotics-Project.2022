@@ -1,0 +1,3 @@
+[submodule "armor_py_api"]
+	path = armor_py_api
+	url = https://github.com/EmaroLab/armor_py_api.git
