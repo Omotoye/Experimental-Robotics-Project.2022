@@ -162,7 +162,7 @@ if __name__ == "__main__":
 
         # Create and start the introspection server
         sis = smach_ros.IntrospectionServer(
-            "server_name", surveillance, "Cluedo Game Robotics Scenario"
+            "server_name", surveillance, "Surveillance Robot State Machine"
         )
         sis.start()
 
