@@ -22,4 +22,5 @@
  - [x] Make a paper sketch of the states and transitions in the state machine
  - [x] Define the structure of the state machine with smach. 
  - [x] Test the state machine by putting a dummy task in each of the states. 
+### 09/02/2023
  - [ ] Define the *messages/services/actions* required for the interfaces in the architecture. 
