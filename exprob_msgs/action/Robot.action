@@ -1,0 +1,8 @@
+# goal definition
+string goal 
+---
+# result definition
+string result 
+---
+# feedback
+string task_state # base message that would be changed later based on project requirements. 
