@@ -67,8 +67,8 @@ if __name__ == "__main__":
             phase1,
             transitions={
                 "knowledge updated": "Phase 2 (Surveillance)",
-                "battery low": "Phase 3 (Battery Recharging / Ending Surveillance)",
-                "stop call": "Phase 3 (Battery Recharging / Ending Surveillance)",
+                "battery low": "Phase 3 (Battery Recharging)",
+                "stop call": "Phase 3 (Battery Recharging)",
             },
             # remapping={"": ""},
         )
@@ -123,8 +123,8 @@ if __name__ == "__main__":
             "Phase 2 (Surveillance)",
             phase2,
             transitions={
-                "battery low": "Phase 3 (Battery Recharging / Ending Surveillance)",
-                "stop call": "Phase 3 (Battery Recharging / Ending Surveillance)",
+                "battery low": "Phase 3 (Battery Recharging)", 
+                "stop call": "Phase 3 (Battery Recharging)",
             },
             # remapping={"": ""},
         )
@@ -151,7 +151,7 @@ if __name__ == "__main__":
             )
 
         smach.StateMachine.add(
-            "Phase 3 (Battery Recharging / Ending Surveillance)",
+            "Phase 3 (Battery Recharging)",
             phase3,
             transitions={
                 "battery charged": "Phase 2 (Surveillance)",
