@@ -1,3 +1,3 @@
-# would be added later 
+string goal # the goal could be `update topology`, `query can-reach`, `query urgent-location`
 ---
 string result # of the service required by the knowledge server. 
