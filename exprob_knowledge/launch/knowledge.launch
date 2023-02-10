@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<launch>
+	<group ns="topological_map">
+		<rosparam file="$(find exprob_knowledge)/params/topological_map.yaml" command="load" />
+	</group>
+    <node name="knowledge" pkg="exprob_knowledge" type="knowledge_client.py" output="screen" respawn="false" />
+</launch>
