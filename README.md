@@ -24,6 +24,9 @@
  - [x] Test the state machine by putting a dummy task in each of the states. 
 ### 09/02/2023
  - [x] Define the *messages/services/actions* required for the interfaces in the architecture. 
- - [ ] Create a server node to take instructions from the state machine and robot controller and then interface with aRMOR service.
- - [ ] Complete all the nodes required required for Phase 1 of the surveillance senario. 
- - [ ] Test the architecture to see that phase 1 works as intended.  
+ - [x] Create a server node to take instructions from the state machine and robot controller and then interface with aRMOR service.
+### 10/02/2023
+ - [x] Complete all the nodes required required for Phase 1 of the surveillance senario. 
+ - [x] Test the architecture to see that phase 1 works as intended.  
+### 10/02/2023
+
