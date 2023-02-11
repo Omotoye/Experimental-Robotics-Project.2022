@@ -26,7 +26,19 @@
  - [x] Define the *messages/services/actions* required for the interfaces in the architecture. 
  - [x] Create a server node to take instructions from the state machine and robot controller and then interface with aRMOR service.
 ### 10/02/2023
- - [x] Complete all the nodes required required for Phase 1 of the surveillance senario. 
+ - [x] Complete all the nodes required for Phase 1 of the surveillance senario. 
  - [x] Test the architecture to see that phase 1 works as intended.  
-### 10/02/2023
-
+### 11/02/2023
+ - [ ] Create a control package for the robot state node and robot controller node. 
+ - [ ] Create a navigation package for the dummy navigation node. 
+ - [ ] Integrate the controller, robot-state, knowledge and navigation with the state machine based on properly defined messages for interfacing. 
+ - [ ] Complete all the nodes and logic required for the Phase 2 of the surveillance senario.
+ - [ ] Complete all the nodes and logic required for the Phase 3 of the surveillance senario. 
+ - [ ] Test the architecture to see that all the nodes are working together as intended for the surveillance senario.
+ - [ ] Create a UML diagram of the proposed architecture. 
+ - [ ] Create the Sequence diagram
+ - [ ] Create the State Diagram. 
+ - [ ] Refactor the code base for clarity and readability
+ - [ ] Add proper commenting to the code base. 
+ - [ ] Add a Sphinx documentation to the repo 
+ - [ ] Complete the readme as per assignment requirements. 
