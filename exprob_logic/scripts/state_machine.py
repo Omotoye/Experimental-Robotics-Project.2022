@@ -33,22 +33,22 @@ if __name__ == "__main__":
         with phase1:
             # Add states to the substatemachine container
             smach.StateMachine.add(
-                "Get Environment Map",
-                GetMap(),
+                "Check Map Availability",
+                CheckMap(),
                 transitions={
-                    "no map exist": "Build Environment Map",
-                    "map acquired": "Update Knowledge",
-                    "map check failed": "Get Environment Map",
+                    "no map exist": "Build Topological Map",
+                    "map available": "Update Knowledge",
+                    "map check failed": "Check Map Availability",
                 },
                 # remapping={"": ""},
             )
 
             smach.StateMachine.add(
-                "Build Environment Map",
+                "Build Topological Map",
                 BuildMap(),
                 transitions={
                     "mapping completed": "Update Knowledge",
-                    "mapping failed": "Build Environment Map",
+                    "mapping failed": "Build Topological Map",
                 },
                 # remapping={"": ""},
             )
@@ -80,8 +80,9 @@ if __name__ == "__main__":
                 "Get Next Point of Interest",
                 GetNextPointOfInterest(),
                 transitions={
-                    "next room reachable": "GoTo Room",
-                    "next room not reachable": "GoTo Corridor",
+                    "reachable urgency room": "GoTo Room",
+                    "no reachable urgency room": "GoTo Corridor",
+                    "no reachable corridor": "Survey Corridor",
                     "query failed": "Get Next Point of Interest",
                 },
                 # remapping={"": ""},
@@ -101,7 +102,7 @@ if __name__ == "__main__":
                 "GoTo Corridor",
                 GoToCorridor(),
                 transitions={
-                    "at corridor": "Get Next Point of Interest",
+                    "at corridor": "Survey Corridor",
                     "failed to reach corridor": "GoTo Corridor",
                 },
                 # remapping={"": ""},
@@ -115,6 +116,16 @@ if __name__ == "__main__":
                     "survey failed": "Survey Room",
                     "battery low": "GoTo Corridor",
                     "stop call": "GoTo Corridor",
+                },
+                # remapping={"": ""},
+            )
+            
+            smach.StateMachine.add(
+                "Survey Corridor",
+                SurveyCorridor(),
+                transitions={
+                    "survey completed": "Get Next Point of Interest", 
+                    "survey failed": "Survey Corridor",
                 },
                 # remapping={"": ""},
             )
