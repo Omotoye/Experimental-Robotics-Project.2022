@@ -58,7 +58,7 @@ find_package(catkin REQUIRED COMPONENTS
 add_service_files(
   FILES
   Knowledge.srv
-  RobotNav.srv
+  RobotState.srv
 )
 
 ## Generate actions in the 'action' folder

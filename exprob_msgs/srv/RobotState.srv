@@ -1,0 +1,6 @@
+# would be added later 
+---
+float32 battery_level
+bool battery_charging
+bool robot_is_in
+bool low_battery
