@@ -29,8 +29,9 @@
  - [x] Complete all the nodes required for Phase 1 of the surveillance senario. 
  - [x] Test the architecture to see that phase 1 works as intended.  
 ### 11/02/2023
- - [ ] Create a control package for the robot state node and robot controller node. 
- - [ ] Create a navigation package for the dummy navigation node. 
+ - [x] Create a control package for the robot state node and robot controller node. 
+ - [x] Create a navigation package for the dummy navigation node. 
+### 12/02/2023
  - [ ] Integrate the controller, robot-state, knowledge and navigation with the state machine based on properly defined messages for interfacing. 
  - [ ] Complete all the nodes and logic required for the Phase 2 of the surveillance senario.
  - [ ] Complete all the nodes and logic required for the Phase 3 of the surveillance senario. 
