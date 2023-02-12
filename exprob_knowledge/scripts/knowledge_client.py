@@ -52,12 +52,13 @@ class KnowledgeManager:
         self.reference_name: str = reference_name
         self.owl_file_name: str = "topological_map.owl"
         self.path: str = dirname(realpath(__file__)) + "/../params/"
+        self.iri: str = "http://bnc/exp-rob-lab/2022-23"
         self.client: ArmorClientPlus = ArmorClientPlus(
             self.client_id, self.reference_name
         )
         self.client.utils.load_ref_from_file(
             self.path + self.owl_file_name,
-            "http://www.semanticweb.org/emarolab/pyarmor/test",
+            self.iri,
             True,
             "PELLET",
             True,
@@ -83,8 +84,11 @@ class KnowledgeManager:
                         )
                         self.individuals.add(door)
 
-                if self.client.disjoint_all_ind(individuals=list(self.individuals)):
-                    self.client.utils.sync_buffered_reasoner()
+                if (
+                    self.client.disjoint_all_ind(individuals=list(self.individuals))
+                    and self.client.utils.apply_buffered_changes()
+                    and self.client.utils.sync_buffered_reasoner()
+                ):
                     self.response.result = "updated"
         return self.response
 
