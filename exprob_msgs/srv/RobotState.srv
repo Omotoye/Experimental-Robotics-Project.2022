@@ -1,6 +1,9 @@
-# would be added later 
+string goal # possible goals: `update state`, `query state`, `stop surveillance` 
+string robot_is_in
 ---
+bool success
 float32 battery_level
 bool battery_charging
-bool robot_is_in
+string robot_is_in
 bool low_battery
+bool stop_call
