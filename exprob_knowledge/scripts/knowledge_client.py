@@ -5,9 +5,9 @@ from os.path import dirname, realpath
 from typing import Final, Callable, Optional, List, Dict, MutableSet, Union
 from enum import Enum, auto
 import rospy
-from exprob_msgs.srv import Knowledge, KnowledgeResponse, KnowledgeRequest  # type: ignore
+from exprob_msgs.srv import Knowledge, KnowledgeResponse, KnowledgeRequest  # type: ignore[attr-defined]
 from armor_msgs.msg import ArmorDirectiveRes
-from armor_api.armor_exceptions import ArmorServiceInternalError, ArmorServiceCallError  # type: ignore
+from armor_api.armor_exceptions import ArmorServiceInternalError, ArmorServiceCallError  # type: ignore[attr-defined]
 
 # Type Aliases
 LocationInfo = Dict[str, Union[float, List[str]]]
@@ -79,7 +79,7 @@ class KnowledgeManager:
                 topological_map: Final[MapParam] = rospy.get_param("/topological_map")
                 for location, location_info in topological_map.items():
                     self.individuals.add(location)
-                    for door in location_info['doors']: # type: ignore[union-attr]
+                    for door in location_info["doors"]:  # type: ignore[union-attr]
                         self.client.manipulation.add_objectprop_to_ind(
                             "hasDoor", location, door
                         )
