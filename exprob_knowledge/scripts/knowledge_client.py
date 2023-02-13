@@ -2,15 +2,16 @@
 
 from armor_client import ArmorClient
 from os.path import dirname, realpath
-from typing import Final, Callable, Optional, List, Dict, MutableSet
+from typing import Final, Callable, Optional, List, Dict, MutableSet, Union
 from enum import Enum, auto
 import rospy
-from exprob_msgs.srv import Knowledge, KnowledgeResponse, KnowledgeRequest  # type: ignore# armor custom messages
+from exprob_msgs.srv import Knowledge, KnowledgeResponse, KnowledgeRequest  # type: ignore
 from armor_msgs.msg import ArmorDirectiveRes
 from armor_api.armor_exceptions import ArmorServiceInternalError, ArmorServiceCallError  # type: ignore
 
 # Type Aliases
-MapParam = Dict[str, List[str]]
+LocationInfo = Dict[str, Union[float, List[str]]]
+MapParam = Dict[str, LocationInfo]
 
 
 class ArmorClientPlus(ArmorClient):
@@ -76,14 +77,13 @@ class KnowledgeManager:
         if msg.goal == "update topology":
             if rospy.has_param("/topological_map"):
                 topological_map: Final[MapParam] = rospy.get_param("/topological_map")
-                for location, doors in topological_map.items():
+                for location, location_info in topological_map.items():
                     self.individuals.add(location)
-                    for door in doors:
+                    for door in location_info['doors']: # type: ignore[union-attr]
                         self.client.manipulation.add_objectprop_to_ind(
                             "hasDoor", location, door
                         )
                         self.individuals.add(door)
-
                 if (
                     self.client.disjoint_all_ind(individuals=list(self.individuals))
                     and self.client.utils.apply_buffered_changes()
