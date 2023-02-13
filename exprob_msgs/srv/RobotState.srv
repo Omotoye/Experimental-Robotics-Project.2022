@@ -1,5 +1,10 @@
 string goal # possible goals: `update state`, `query state`, `stop surveillance` 
+float32 battery_level
+bool battery_charging
 string robot_is_in
+bool low_battery
+bool stop_call
+bool full_battery
 ---
 bool success
 float32 battery_level
@@ -7,3 +12,4 @@ bool battery_charging
 string robot_is_in
 bool low_battery
 bool stop_call
+bool full_battery
