@@ -7,10 +7,24 @@ from enum import Enum
 # Brings in the SimpleActionClient
 
 # Here we bring in all the messages required to interface with each of the nodes
-from exprob_msgs.srv import Knowledge, KnowledgeResponse, KnowledgeRequest  # type: ignore# armor custom messages
+from exprob_msgs.srv import Knowledge, KnowledgeResponse, KnowledgeRequest  # type: ignore[attr-defined]
+from exprob_msgs.srv import RobotState, RobotStateRequest, RobotStateResponse  # type: ignore[attr-defined]
 
-BATTERY_LOW: bool = False
-STOP_CALL: bool = False
+
+robot_state: RobotStateResponse = RobotStateResponse()
+robot_state.low_battery = False
+robot_state.stop_call = False
+
+
+def update_robot_state(req: RobotStateRequest) -> RobotStateResponse:
+    global robot_state
+    robot_state.low_battery = req.low_battery
+    robot_state.stop_call = req.stop_call
+    robot_state.battery_charging = req.battery_charging
+    robot_state.robot_is_in = req.robot_is_in
+    robot_state.full_battery = req.full_battery
+    robot_state.success = True
+    return robot_state
 
 
 ###***********   PHASE 1   ***********************#####
@@ -41,8 +55,8 @@ class CheckMap(smach.State):
             )
         else:
             self.ret = "map check failed"
-        self.ret = "battery low" if BATTERY_LOW else self.ret
-        self.ret = "stop call" if STOP_CALL else self.ret
+        self.ret = "battery low" if robot_state.low_battery else self.ret
+        self.ret = "stop call" if robot_state.stop_call else self.ret
         return self.ret
 
 
@@ -65,8 +79,8 @@ class BuildMap(smach.State):
         #   NOTE: This state would never be visited for this stage of the project
         #   it is just a place holder for when the map would actually be required
         #   to be built in a more complicated version of this project.
-        self.ret = "battery low" if BATTERY_LOW else self.ret
-        self.ret = "stop call" if STOP_CALL else self.ret
+        self.ret = "battery low" if robot_state.low_battery else self.ret
+        self.ret = "stop call" if robot_state.stop_call else self.ret
         return self.ret
 
 
@@ -110,8 +124,8 @@ class UpdateKnowledge(smach.State):
 
     def execute(self, userdata: Any) -> str:
         self.ret = "knowledge updated" if self.call_knowledge_srv() else "update failed"
-        self.ret = "battery low" if BATTERY_LOW else self.ret
-        self.ret = "stop call" if STOP_CALL else self.ret
+        self.ret = "battery low" if robot_state.low_battery else self.ret
+        self.ret = "stop call" if robot_state.stop_call else self.ret
         return self.ret
 
 

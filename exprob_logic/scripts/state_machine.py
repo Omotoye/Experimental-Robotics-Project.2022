@@ -13,6 +13,7 @@ if __name__ == "__main__":
     try:
         rospy.init_node("state_machine")
 
+        rospy.Service("robot_state_report", RobotState, update_robot_state)
         # Create a SMACH state machine object
         surveillance: smach.StateMachine = smach.StateMachine(
             outcomes=["End of Surveillance"]
@@ -120,12 +121,12 @@ if __name__ == "__main__":
                     },
                     # remapping={"": ""},
                 )
-                
+
                 smach.StateMachine.add(
                     "Survey Corridor",
                     SurveyCorridor(),
                     transitions={
-                        "survey completed": "Get Next Point of Interest", 
+                        "survey completed": "Get Next Point of Interest",
                         "survey failed": "Survey Corridor",
                     },
                     # remapping={"": ""},
@@ -135,7 +136,7 @@ if __name__ == "__main__":
                 "Phase 2 (Surveillance)",
                 phase2,
                 transitions={
-                    "battery low": "Phase 3 (Battery Recharging)", 
+                    "battery low": "Phase 3 (Battery Recharging)",
                     "stop call": "Phase 3 (Battery Recharging)",
                 },
                 # remapping={"": ""},
