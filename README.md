@@ -31,11 +31,12 @@
 ### 11/02/2023
  - [x] Create a control package for the robot state node and robot controller node. 
  - [x] Create a navigation package for the dummy navigation node. 
-### 12/02/2023
+### 12/02/2023 - 19/02/2023
  - [ ] Integrate the controller, robot-state, knowledge and navigation with the state machine based on properly defined messages for interfacing. 
  - [ ] Complete all the nodes and logic required for the Phase 2 of the surveillance senario.
  - [ ] Complete all the nodes and logic required for the Phase 3 of the surveillance senario. 
  - [ ] Test the architecture to see that all the nodes are working together as intended for the surveillance senario.
+### 19/02/2023
  - [ ] Create a UML diagram of the proposed architecture. 
  - [ ] Create the Sequence diagram
  - [ ] Create the State Diagram. 
@@ -43,4 +44,5 @@
  - [ ] Add proper commenting to the code base. 
  - [ ] Add a Sphinx documentation to the repo 
  - [ ] Complete the readme as per assignment requirements. 
-### 14/02/2023
+
+_**End of version-1.0.0 of the Project...**_
