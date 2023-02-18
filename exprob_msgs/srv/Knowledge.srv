@@ -1,3 +1,5 @@
 string goal # the goal could be `update topology`, `query can-reach`, `query urgent-location`
 ---
 string result # result of the service required by the knowledge server. 
+string next_room_of_interest
+string next_corridor_of_interest
