@@ -13,7 +13,6 @@ if __name__ == "__main__":
     try:
         rospy.init_node("state_machine")
 
-        rospy.Service("robot_state_report", RobotState, update_robot_state)
         # Create a SMACH state machine object
         surveillance: smach.StateMachine = smach.StateMachine(
             outcomes=["End of Surveillance"]
