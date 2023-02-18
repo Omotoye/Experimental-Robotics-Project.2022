@@ -65,8 +65,7 @@ class KnowledgeManager:
             self.client_id, self.reference_name
         )
         self.client.utils.load_ref_from_file(
-            # self.path + self.owl_file_name,
-            "/home/omotoye/topological_map/topological_map_abox.owl",
+            self.path + self.owl_file_name,
             self.iri,
             True,
             "PELLET",
@@ -102,10 +101,6 @@ class KnowledgeManager:
             self._update_topology()
         elif msg.goal == "get next poi":
             self._get_next_point_of_interest()
-        elif msg.goal == "visited at":
-            self._update_visited_timestamp(random.choice(["R1", "R2"]))
-        elif msg.goal == "now":
-            self._update_current_timestamp()
         return self.response
 
     def _update_topology(self) -> None:
