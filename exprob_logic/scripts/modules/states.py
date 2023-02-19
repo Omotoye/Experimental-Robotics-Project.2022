@@ -73,9 +73,13 @@ class BuildMap(smach.State):
 
     def execute(self, userdata: Any) -> str:
         self.action_msg.goal = "build map"
-        result = call_robot_controller(self.action_msg)
-        outcome: str = result.result
-        return outcome
+        #   NOTE: This state would never be visited for this stage of the project
+        #   it is just a place holder for when the map would actually be required
+        #   to be built in a more complicated version of this project.
+        # result = call_robot_controller(self.action_msg)
+        # outcome: str = result.result
+        # return outcome
+        return ""
 
 
 class UpdateKnowledge(smach.State):
@@ -96,6 +100,30 @@ class UpdateKnowledge(smach.State):
 
 
 ###***********   PHASE 2   ***********************#####
+
+
+class GetNextPointOfInterest(smach.State):
+    def __init__(self) -> None:
+        smach.State.__init__(
+            self,
+            outcomes=[
+                "reachable urgency room",
+                "no reachable urgency room",
+                "no reachable corridor",
+                "query failed",
+                "battery low",
+                "stop call",
+            ],
+            output_keys=[],
+            input_keys=[],
+        )
+        self.action_msg: RobotControllerGoal = RobotControllerGoal()
+
+    def execute(self, userdata: Any) -> str:
+        self.action_msg.goal = "get next poi"
+        result = call_robot_controller(self.action_msg)
+        outcome: str = result.result
+        return outcome
 
 
 class GoToRoom(smach.State):
@@ -171,30 +199,6 @@ class SurveyCorridor(smach.State):
         return outcome
 
 
-class GetNextPointOfInterest(smach.State):
-    def __init__(self) -> None:
-        smach.State.__init__(
-            self,
-            outcomes=[
-                "reachable urgency room",
-                "no reachable urgency room",
-                "no reachable corridor",
-                "query failed",
-                "battery low",
-                "stop call",
-            ],
-            output_keys=[],
-            input_keys=[],
-        )
-        self.action_msg: RobotControllerGoal = RobotControllerGoal()
-
-    def execute(self, userdata: Any) -> str:
-        self.action_msg.goal = "get next poi"
-        result = call_robot_controller(self.action_msg)
-        outcome: str = result.result
-        return outcome
-
-
 ###***********   PHASE 3   ***********************#####
 
 
@@ -204,7 +208,7 @@ class GoToRechargePoint(smach.State):
             self,
             outcomes=[
                 "at recharge point",
-                "failed to reach charging point",
+                "failed to reach recharge point",
                 "stop call",
             ],
             output_keys=[],

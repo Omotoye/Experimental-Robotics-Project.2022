@@ -149,7 +149,7 @@ if __name__ == "__main__":
                     GoToRechargePoint(),
                     transitions={
                         "at recharge point": "Battery Charging",
-                        "failed to reach charging point": "GoTo Recharge Point",
+                        "failed to reach recharge point": "GoTo Recharge Point",
                     },
                     # remapping={"": ""},
                 )
