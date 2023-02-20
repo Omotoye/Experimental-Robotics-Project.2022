@@ -15,8 +15,9 @@ class RobotStateManager:
         self.full_battery: bool = True
         self.stop_call: bool = False
         rospy.Service("robot_state", RobotState, self.robot_state_clbk)
-        self.discharge_rate = rospy.Rate(20)
+        self.discharge_rate = rospy.Rate(10)
         self.recharge_rate = rospy.Rate(10)
+        self.battery_status_reported = False
         self.battery_manager()
 
     def battery_manager(self) -> None:
@@ -32,7 +33,7 @@ class RobotStateManager:
         )
         if self.battery_level > 20.0 and self.battery_charging < 100.0:
             self.low_battery = False
-            self.report_robot_status()
+            self.battery_status_reported = False
         if self.battery_level == 100.0:
             self.full_battery = True
             self.battery_charging = False
@@ -46,22 +47,28 @@ class RobotStateManager:
         self.full_battery = False
         if self.battery_level < 20.0:
             self.low_battery = True
-            self.report_robot_status()
+            if not self.battery_status_reported:
+                self.report_robot_status()
+                self.battery_status_reported == True
         self.discharge_rate.sleep()
 
     def robot_state_clbk(self, req: RobotStateRequest) -> RobotStateResponse:
+        response = RobotStateResponse()
         if req.goal == "stop surveillance":
             self.stop_call = req.stop_call
-        elif req.goal == "update state":
+        elif req.goal == "update robot location":
             self.robot_is_in = req.robot_is_in
-        response = RobotStateResponse()
+
+        elif req.goal == "start charging":
+            pass
+        elif req.goal == "query state":
+            response.battery_level = self.battery_level
+            response.battery_charging = self.battery_charging
+            response.robot_is_in = self.robot_is_in
+            response.low_battery = self.low_battery
+            response.stop_call = self.stop_call
+            response.full_battery = self.full_battery
         response.success = True
-        response.battery_level = self.battery_level
-        response.battery_charging = self.battery_charging
-        response.robot_is_in = self.robot_is_in
-        response.low_battery = self.low_battery
-        response.stop_call = self.stop_call
-        response.full_battery = self.full_battery
         self.report_robot_status()
         return response
 
