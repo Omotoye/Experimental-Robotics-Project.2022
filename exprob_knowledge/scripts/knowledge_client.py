@@ -101,12 +101,18 @@ class KnowledgeManager:
             self._update_topology()
         elif msg.goal == "get next poi":
             self._get_next_point_of_interest()
+        elif msg.goal == "update now":
+            self._update_now()
+        elif msg.goal == "update robot location":
+            self._update_robot_location()
+        elif msg.goal == "update visited location":
+            self._update_visited_location()
+
         return self.response
 
     def _update_topology(self) -> None:
         if rospy.has_param("/topological_map"):
             topological_map: Final[MapParam] = rospy.get_param("/topological_map")
-            self._get_robot_state()
             for location, location_info in topological_map.items():
                 self.individuals.add(location)
                 for door in location_info["doors"]:  # type: ignore[union-attr]
@@ -114,15 +120,13 @@ class KnowledgeManager:
                         "hasDoor", location, door
                     )
                     self.individuals.add(door)
-
-            self.client.manipulation.add_objectprop_to_ind(
-                "isIn", self.robot_name, self.robot_state.robot_is_in
-            )
+            self._update_robot_location()
             if (
                 self.client.disjoint_all_ind(individuals=list(self.individuals))
                 and self.client.utils.apply_buffered_changes()
                 and self.client.utils.sync_buffered_reasoner()
             ):
+                self._update_current_timestamp()
                 self.response.result = "updated"
 
     def _get_reachable_locations(self) -> ReachableLocations:
@@ -175,6 +179,8 @@ class KnowledgeManager:
             self.response.next_corridor_of_interest = random.choice(
                 reachable_loc["corridor"]
             )
+        else:
+            self.response.result = "query failed"
 
     def _update_current_timestamp(self) -> None:
         old_now_timestamp: str = self._get_previous_timestamp()
@@ -227,6 +233,23 @@ class KnowledgeManager:
             if room in reachable_rooms:
                 reachable_urgent_rooms.append(room)
         return reachable_urgent_rooms
+
+    def _update_now(self):
+        self._update_current_timestamp()
+        self.response.result = "updated"
+
+    def _update_robot_location(self):
+        self._get_robot_state()
+        self.client.manipulation.add_objectprop_to_ind(
+            "isIn", self.robot_name, self.robot_state.robot_is_in
+        )
+        self.client.utils.apply_buffered_changes()
+        self.client.utils.sync_buffered_reasoner()
+        self.response.result = "updated"
+
+    def _update_visited_location(self):
+        self._update_visited_timestamp(location=self.robot_state.robot_is_in)
+        self.response.result = "updated"
 
 
 if __name__ == "__main__":
