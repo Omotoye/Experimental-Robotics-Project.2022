@@ -117,13 +117,17 @@ class Controller:
     def _update_topology(self):
         req = KnowledgeRequest()
         req.goal = "update topology"
-        self._result = (
+        self._result.result = (
             "knowledge updated"
             if (self.call_knowledge_srv(req)).result == "updated"
             else "update failed"
         )
-        self._result = "battery low" if self.robot_state.low_battery else self._result
-        self._result = "stop call" if self.robot_state.stop_call else self._result
+        self._result.result = (
+            "battery low" if self.robot_state.low_battery else self._result.result
+        )
+        self._result.result = (
+            "stop call" if self.robot_state.stop_call else self._result.result
+        )
 
     def _get_next_poi(self) -> None:
         req = KnowledgeRequest()
@@ -131,9 +135,13 @@ class Controller:
         response: KnowledgeResponse = self.call_knowledge_srv(req)
         self._next_corridor_of_interest = response.next_corridor_of_interest
         self._next_room_of_interest = response.next_room_of_interest
-        self._result = response.result
-        self._result = "battery low" if self.robot_state.low_battery else self._result
-        self._result = "stop call" if self.robot_state.stop_call else self._result
+        self._result.result = response.result
+        self._result.result = (
+            "battery low" if self.robot_state.low_battery else self._result.result
+        )
+        self._result.result = (
+            "stop call" if self.robot_state.stop_call else self._result.result
+        )
 
     def _goto_poi(self, location_type: str):
         req = KnowledgeRequest()
@@ -146,18 +154,20 @@ class Controller:
         # waste time to simulate surveillance
         for i in range(int(3 if location_type == "room" else 5 * random.random())):
             if self.robot_state.low_battery or self.robot_state.stop_call:
-                self._result = (
-                    "battery low" if self.robot_state.low_battery else self._result
+                self._result.result = (
+                    "battery low"
+                    if self.robot_state.low_battery
+                    else self._result.result
                 )
-                self._result = (
-                    "stop call" if self.robot_state.stop_call else self._result
+                self._result.result = (
+                    "stop call" if self.robot_state.stop_call else self._result.result
                 )
                 break
             time.sleep(1)
-        self._result = (
+        self._result.result = (
             "survey completed"
             if not (self.robot_state.low_battery or self.robot_state.stop_call)
-            else self._result
+            else self._result.result
         )
         if location_type == "room":
             req: KnowledgeRequest = KnowledgeRequest()
@@ -171,11 +181,11 @@ class Controller:
             while not (self.robot_state.full_battery or self.robot_state.stop_call):
                 time.sleep(1)
             else:
-                self._result = (
+                self._result.result = (
                     "battery charged" if self.robot_state.full_battery else "stop call"
                 )
         else:
-            self._result = "battery charging failed"
+            self._result.result = "battery charging failed"
 
     def update_robot_state(self, req: RobotStateRequest) -> RobotStateResponse:
         global robot_state
@@ -222,8 +232,8 @@ class Controller:
 
     def call_robot_navigator(self, location_type: str) -> None:
         # Creates the SimpleActionClient, passing the type of the action
-        client = actionlib.SimpleActionClient("robot_navigation", RobotNavAction)
-
+        client = actionlib.SimpleActionClient("navigation", RobotNavAction)
+        print("I am here")
         goal_req = RobotNavGoal()
         goal_req.poi = (
             self._next_room_of_interest
@@ -237,30 +247,33 @@ class Controller:
 
         # Sends the goal to the action server.
         client.send_goal(goal_req)
-
+        print("The goal has been sent")
         # Waits for the server to finish performing the action.
         # client.wait_for_result()
-
+        count = 0
         while True:
             if (
                 self.robot_state.low_battery
                 and self._next_corridor_of_interest != self._recharge_point
             ) or self.robot_state.stop_call:
+                print("it's time to cancel the goal")
                 client.cancel_goal()
-                self._result = (
+                self._result.result = (
                     "battery low"
                     if (
                         self.robot_state.low_battery
                         and self._next_corridor_of_interest != self._recharge_point
                     )
-                    else self._result
+                    else self._result.result
                 )
-                self._result = (
-                    "stop call" if self.robot_state.stop_call else self._result
+                self._result.result = (
+                    "stop call" if self.robot_state.stop_call else self._result.result
                 )
                 break
+            print(f"Loop: {count}")
             if client.get_state() == GoalStatus.SUCCEEDED:
-                self._result = f"at {location_type}"
+                print("The goal has succeeded")
+                self._result.result = f"at {location_type}"
                 self.robot_state.robot_is_in = goal_req.poi
                 robot_state_req: RobotStateRequest = RobotStateRequest()
                 knowledge_req: KnowledgeRequest = KnowledgeRequest()
@@ -271,7 +284,7 @@ class Controller:
                 self.call_knowledge_srv(knowledge_req)
                 break
             elif client.get_state() == GoalStatus.ABORTED:
-                self._result = f"failed to reach {location_type}"
+                self._result.result = f"failed to reach {location_type}"
                 break
 
 

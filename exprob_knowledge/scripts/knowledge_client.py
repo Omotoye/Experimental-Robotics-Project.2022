@@ -136,6 +136,7 @@ class KnowledgeManager:
         response: List[str] = self.client.query.objectprop_b2_ind(
             "canReach", self.robot_name
         )
+        print(f"\n\n\ncanReach: {response}\n\n\n")
         reachable_locations: ReachableLocations = {
             "room": [],
             "corridor": [],
@@ -157,6 +158,8 @@ class KnowledgeManager:
         urgent_rooms: List[str] = self._get_reachable_urgent_rooms(
             reachable_loc["room"]
         )
+        print(f"\n\n\nReachable rooms: {reachable_loc}\n\n\n")
+        print(f"\n\n\nUrgent Rooms: {urgent_rooms}\n\n\n")
         if reachable_loc["room"] and reachable_loc["corridor"]:
             if urgent_rooms:
                 self.response.result = "reachable urgency room"
