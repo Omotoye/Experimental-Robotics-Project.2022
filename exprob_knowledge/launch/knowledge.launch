@@ -1,5 +1,9 @@
 <?xml version="1.0"?>
 <launch>
+	<!-- <group ns="topological_map">
+		<rosparam file="$(find exprob_navigation)/params/topological_map.yaml" command="load" />
+	</group> -->
+
 	<node pkg="armor" type="execute" name="armor_service" args="it.emarolab.armor.ARMORMainService" />
 	<node name="knowledge" pkg="exprob_knowledge" type="knowledge_client.py" output="screen"
 		respawn="false" />

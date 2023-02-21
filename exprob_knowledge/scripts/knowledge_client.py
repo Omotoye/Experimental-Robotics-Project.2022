@@ -9,7 +9,6 @@ import time
 
 import rospy
 from exprob_msgs.srv import Knowledge, KnowledgeResponse, KnowledgeRequest  # type: ignore[attr-defined]
-from exprob_msgs.srv import RobotState, RobotStateRequest, RobotStateResponse  # type: ignore[attr-defined]
 
 from armor_msgs.msg import ArmorDirectiveRes
 from armor_api.armor_exceptions import ArmorServiceInternalError, ArmorServiceCallError  # type: ignore[attr-defined]
@@ -77,50 +76,35 @@ class KnowledgeManager:
 
         rospy.Service("/knowledge_srv", Knowledge, self.knowledge_clbk)
         self.response: KnowledgeResponse = KnowledgeResponse()
-        self.robot_state: RobotStateResponse = RobotStateResponse()
         self.individuals: MutableSet[str] = set()
-
-    def _get_robot_state(self) -> None:
-        rospy.wait_for_service("robot_state")
-        try:
-            robot_state_srv = rospy.ServiceProxy("robot_state", RobotState)
-            request: RobotStateRequest = RobotStateRequest()
-            request.goal = "query state"
-            self.robot_state = robot_state_srv(request)
-
-        except rospy.ServiceException as e:
-            rospy.logerr(f"Service call failed: {e}")
-        except rospy.ROSException as e:
-            rospy.logerr(f"ROS Exception: {e}")
-        except Exception as e:
-            rospy.logerr(e)
 
     def knowledge_clbk(self, msg: KnowledgeRequest) -> KnowledgeResponse:
         self.response.result = f"{msg.goal} failed"
         if msg.goal == "update topology":
-            self._update_topology()
+            self._update_topology(msg.robot_location)
         elif msg.goal == "get next poi":
             self._get_next_point_of_interest()
         elif msg.goal == "update now":
             self._update_now()
         elif msg.goal == "update robot location":
-            self._update_robot_location()
+            self._update_robot_location(msg.robot_location)
         elif msg.goal == "update visited location":
-            self._update_visited_location()
+            self._update_visited_location(msg.robot_location)
 
         return self.response
 
-    def _update_topology(self) -> None:
+    def _update_topology(self, robot_location) -> None:
         if rospy.has_param("/topological_map"):
             topological_map: Final[MapParam] = rospy.get_param("/topological_map")
             for location, location_info in topological_map.items():
                 self.individuals.add(location)
+                self._update_visited_location(location)
                 for door in location_info["doors"]:  # type: ignore[union-attr]
                     self.client.manipulation.add_objectprop_to_ind(
                         "hasDoor", location, door
                     )
                     self.individuals.add(door)
-            self._update_robot_location()
+            self._update_robot_location(robot_location)
             if (
                 self.client.disjoint_all_ind(individuals=list(self.individuals))
                 and self.client.utils.apply_buffered_changes()
@@ -136,7 +120,6 @@ class KnowledgeManager:
         response: List[str] = self.client.query.objectprop_b2_ind(
             "canReach", self.robot_name
         )
-        print(f"\n\n\ncanReach: {response}\n\n\n")
         reachable_locations: ReachableLocations = {
             "room": [],
             "corridor": [],
@@ -158,8 +141,6 @@ class KnowledgeManager:
         urgent_rooms: List[str] = self._get_reachable_urgent_rooms(
             reachable_loc["room"]
         )
-        print(f"\n\n\nReachable rooms: {reachable_loc}\n\n\n")
-        print(f"\n\n\nUrgent Rooms: {urgent_rooms}\n\n\n")
         if reachable_loc["room"] and reachable_loc["corridor"]:
             if urgent_rooms:
                 self.response.result = "reachable urgency room"
@@ -241,17 +222,31 @@ class KnowledgeManager:
         self._update_current_timestamp()
         self.response.result = "updated"
 
-    def _update_robot_location(self):
-        self._get_robot_state()
-        self.client.manipulation.add_objectprop_to_ind(
-            "isIn", self.robot_name, self.robot_state.robot_is_in
-        )
+    def _get_previous_robot_location(self) -> Optional[str]:
+        self.client.utils.apply_buffered_changes()
+        self.client.utils.sync_buffered_reasoner()
+        response = self.client.query.objectprop_b2_ind("isIn", self.robot_name)
+        return response[0] if response else None
+
+    def _update_robot_location(self, new_location) -> None:
+        old_robot_location: Optional[str] = self._get_previous_robot_location()
+        if old_robot_location:
+            self.client.manipulation.replace_objectprop_b2_ind(
+                objectprop_name="isIn",
+                ind_name=self.robot_name,
+                new_value=new_location,
+                old_value=old_robot_location,
+            )
+        else:
+            self.client.manipulation.add_objectprop_to_ind(
+                "isIn", self.robot_name, new_location
+            )
         self.client.utils.apply_buffered_changes()
         self.client.utils.sync_buffered_reasoner()
         self.response.result = "updated"
 
-    def _update_visited_location(self):
-        self._update_visited_timestamp(location=self.robot_state.robot_is_in)
+    def _update_visited_location(self, visited_location):
+        self._update_visited_timestamp(location=visited_location)
         self.response.result = "updated"
 
 
