@@ -1,10 +1,13 @@
-import smach  # importing the library for the creation of the state machine
+# importing the library for the creation of the states of the state machine
+import smach
+
+# Library for creating an Action Client to connect with the Robot Controller
 import actionlib
 
-from typing import List, Final, Any, Optional
-from enum import Enum
+# for type annotation
+from typing import Any
 
-# The robot controller action messages
+# The custom action messages created for interfacing with the Robot controller
 from exprob_msgs.msg import (
     RobotControllerAction,
     RobotControllerGoal,
@@ -12,9 +15,12 @@ from exprob_msgs.msg import (
 )
 
 
+# Helper function to send goal messages to the RobotController Server
 def call_robot_controller(goal_req: RobotControllerGoal) -> RobotControllerResult:
     # Creates the SimpleActionClient, passing the type of the action
-    client = actionlib.SimpleActionClient("robot_controller", RobotControllerAction)
+    client: actionlib.SimpleActionClient = actionlib.SimpleActionClient(
+        "robot_controller", RobotControllerAction
+    )
 
     # Waits until the action server has started up and started
     # listening for goals.
@@ -30,7 +36,9 @@ def call_robot_controller(goal_req: RobotControllerGoal) -> RobotControllerResul
     return client.get_result()
 
 
-###***********   PHASE 1   ***********************#####
+###########################################################################################
+###############################     PHASE 1  STATES   #####################################
+###########################################################################################
 
 
 class CheckMap(smach.State):
@@ -51,7 +59,7 @@ class CheckMap(smach.State):
 
     def execute(self, userdata: Any) -> str:
         self.action_msg.goal = "check map"
-        result = call_robot_controller(self.action_msg)
+        result: RobotControllerResult = call_robot_controller(self.action_msg)
         outcome: str = result.result
         return outcome
 
@@ -94,12 +102,14 @@ class UpdateKnowledge(smach.State):
 
     def execute(self, userdata: Any) -> str:
         self.action_msg.goal = "update topology"
-        result = call_robot_controller(self.action_msg)
+        result: RobotControllerResult = call_robot_controller(self.action_msg)
         outcome: str = result.result
         return outcome
 
 
-###***********   PHASE 2   ***********************#####
+###########################################################################################
+###############################     PHASE 2  STATES   #####################################
+###########################################################################################
 
 
 class GetNextPointOfInterest(smach.State):
@@ -121,7 +131,7 @@ class GetNextPointOfInterest(smach.State):
 
     def execute(self, userdata: Any) -> str:
         self.action_msg.goal = "get next poi"
-        result = call_robot_controller(self.action_msg)
+        result: RobotControllerResult = call_robot_controller(self.action_msg)
         outcome: str = result.result
         return outcome
 
@@ -138,7 +148,7 @@ class GoToRoom(smach.State):
 
     def execute(self, userdata: Any) -> str:
         self.action_msg.goal = "goto room"
-        result = call_robot_controller(self.action_msg)
+        result: RobotControllerResult = call_robot_controller(self.action_msg)
         outcome: str = result.result
         return outcome
 
@@ -160,7 +170,7 @@ class GoToCorridor(smach.State):
 
     def execute(self, userdata: Any) -> str:
         self.action_msg.goal = "goto corridor"
-        result = call_robot_controller(self.action_msg)
+        result: RobotControllerResult = call_robot_controller(self.action_msg)
         outcome: str = result.result
         return outcome
 
@@ -177,7 +187,7 @@ class SurveyRoom(smach.State):
 
     def execute(self, userdata: Any) -> str:
         self.action_msg.goal = "survey room"
-        result = call_robot_controller(self.action_msg)
+        result: RobotControllerResult = call_robot_controller(self.action_msg)
         outcome: str = result.result
         return outcome
 
@@ -194,12 +204,14 @@ class SurveyCorridor(smach.State):
 
     def execute(self, userdata: Any) -> str:
         self.action_msg.goal = "survey corridor"
-        result = call_robot_controller(self.action_msg)
+        result: RobotControllerResult = call_robot_controller(self.action_msg)
         outcome: str = result.result
         return outcome
 
 
-###***********   PHASE 3   ***********************#####
+###########################################################################################
+###############################     PHASE 3  STATES   #####################################
+###########################################################################################
 
 
 class GoToRechargePoint(smach.State):
@@ -218,7 +230,7 @@ class GoToRechargePoint(smach.State):
 
     def execute(self, userdata: Any) -> str:
         self.action_msg.goal = "goto recharge point"
-        result = call_robot_controller(self.action_msg)
+        result: RobotControllerResult = call_robot_controller(self.action_msg)
         outcome: str = result.result
         return outcome
 
@@ -235,6 +247,6 @@ class BatteryCharging(smach.State):
 
     def execute(self, userdata: Any) -> str:
         self.action_msg.goal = "charge battery"
-        result = call_robot_controller(self.action_msg)
+        result: RobotControllerResult = call_robot_controller(self.action_msg)
         outcome: str = result.result
         return outcome
