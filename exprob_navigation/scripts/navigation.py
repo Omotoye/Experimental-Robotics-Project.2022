@@ -54,6 +54,7 @@ class RobotNavigation:
             auto_start=False,
         )
         self._as.start()
+        rospy.loginfo(f"{bcolors.OKCYAN}ROBOT NAVIGATION{bcolors.ENDC}: initialization completed {bcolors.OKGREEN}SUCCESSFULLY{bcolors.ENDC}")
 
     def _go_to_poi(self, poi_req: str) -> str:
         # get the coordinate corresponding to the point of interest given
@@ -80,7 +81,7 @@ class RobotNavigation:
             rospy.loginfo(
                 f"{bcolors.OKCYAN}NAVIGATION{bcolors.ENDC}: to {poi} "
                 f"at x: {self._result.x_cord}, y: {self._result.y_cord} "
-                f"has been {bcolors.BOLD}{bcolors.WARNING}PREEMPTED{bcolors.ENDC}"
+                f"has been {bcolors.BOLD}{bcolors.WARNING}PREEMPTED{bcolors.ENDC}\n"
             )
             self._as.set_preempted()
             return True
@@ -99,13 +100,13 @@ class RobotNavigation:
                 rospy.loginfo(
                     f"{bcolors.OKCYAN}NAVIGATION{bcolors.ENDC}: to {goal.poi} "
                     f"at x: {self._result.x_cord}, y: {self._result.y_cord} "
-                    f"has {bcolors.OKGREEN}{bcolors.BOLD}SUCCEEDED{bcolors.ENDC}"
+                    f"has {bcolors.OKGREEN}{bcolors.BOLD}SUCCEEDED{bcolors.ENDC}\n"
                 )
         else:
             self._as.set_aborted()
             rospy.loginfo(
                 f"{bcolors.OKCYAN}NAVIGATION{bcolors.ENDC} {bcolors.FAIL}{bcolors.BOLD}ABORTED{bcolors.ENDC}: "
-                f"The Given goal location: {goal.poi} does not exist in the Topological Map"
+                f"The Given goal location: {goal.poi} does not exist in the Topological Map\n"
             )
 
 
