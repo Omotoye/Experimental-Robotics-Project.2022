@@ -35,15 +35,15 @@
  - [x] Integrate the controller, robot-state, knowledge and navigation with the state machine based on properly defined messages for interfacing. 
  - [x] Complete all the nodes and logic required for the Phase 2 of the surveillance senario.
  - [x] Complete all the nodes and logic required for the Phase 3 of the surveillance senario. 
-### 20/02/2023 - 21/02/2023
+### 20/02/2023 - 22/02/2023
  - [x] Test/Fix bugs/Refactor the architecture to see that all the nodes are working together as intended for the surveillance senario.
-### 21/02/2023
+### 22/02/2023
+ - [x] Refactor the code base for clarity and readability
+ - [ ] Add proper commenting to the code base. 
+### 23/02/2023
  - [ ] Create a UML diagram of the proposed architecture. 
  - [ ] Create the Sequence diagram
  - [ ] Create the State Diagram. 
-### 22/02/2023
- - [ ] Refactor the code base for clarity and readability
- - [ ] Add proper commenting to the code base. 
  - [ ] Add a Sphinx documentation to the repo 
  - [ ] Complete the readme as per assignment requirements. 
 
