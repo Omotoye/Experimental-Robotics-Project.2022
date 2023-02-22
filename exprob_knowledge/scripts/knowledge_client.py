@@ -56,6 +56,7 @@ class KnowledgeManager:
     def __init__(self, client_id: str, reference_name: str) -> None:
         self.client_id: str = client_id
         self.robot_name: str = "Robot1"
+        self.urgency_threshold = "60"
         self.reference_name: str = reference_name
         self.owl_file_name: str = "topological_map.owl"
         self.path: str = dirname(realpath(__file__)) + "/../params/"
@@ -105,6 +106,7 @@ class KnowledgeManager:
                     )
                     self.individuals.add(door)
             self._update_robot_location(robot_location)
+            self._initialize_urgency_threshold()
             if (
                 self.client.disjoint_all_ind(individuals=list(self.individuals))
                 and self.client.utils.apply_buffered_changes()
@@ -198,13 +200,20 @@ class KnowledgeManager:
         self.client.utils.apply_buffered_changes()
         self.client.utils.sync_buffered_reasoner()
 
-    def _get_previous_timestamp(self, location: Optional[str] = None) -> str:
+    def _get_previous_timestamp(
+        self, location: Optional[str] = None, urgency_threshold: bool = False
+    ) -> str:
         self.client.utils.apply_buffered_changes()
         self.client.utils.sync_buffered_reasoner()
-        if location:
-            response = self.client.query.dataprop_b2_ind("visitedAt", location)
+        if not urgency_threshold:
+            if location:
+                response = self.client.query.dataprop_b2_ind("visitedAt", location)
+            else:
+                response = self.client.query.dataprop_b2_ind("now", self.robot_name)
         else:
-            response = self.client.query.dataprop_b2_ind("now", self.robot_name)
+            response = self.client.query.dataprop_b2_ind(
+                "urgencyThreshold", self.robot_name
+            )
         return str(response[0][1:-11]) if response else "0"
 
     def _get_reachable_urgent_rooms(self, reachable_rooms: List[str]) -> List[str]:
@@ -248,6 +257,18 @@ class KnowledgeManager:
     def _update_visited_location(self, visited_location):
         self._update_visited_timestamp(location=visited_location)
         self.response.result = "updated"
+
+    def _initialize_urgency_threshold(self) -> None:
+        old_urgency_threshold: str = self._get_previous_timestamp(urgency_threshold=True)
+        self.client.manipulation.replace_dataprop_b2_ind(
+            dataprop_name="urgencyThreshold",
+            ind_name=self.robot_name,
+            value_type="Long",
+            new_value=self.urgency_threshold,
+            old_value=old_urgency_threshold,
+        )
+        self.client.utils.apply_buffered_changes()
+        self.client.utils.sync_buffered_reasoner()
 
 
 if __name__ == "__main__":
