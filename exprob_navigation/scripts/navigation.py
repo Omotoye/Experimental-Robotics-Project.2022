@@ -63,7 +63,8 @@ class RobotNavigation:
 
         # log the coordinates
         rospy.loginfo(
-            f"{bcolors.OKCYAN}NAVIGATING{bcolors.ENDC}: to {poi_req} at coordinates x: {goal_info['x_axis']}, y: {goal_info['y_axis']}"
+            f"{bcolors.OKCYAN}NAVIGATING{bcolors.ENDC}: to {poi_req} "
+            f"at coordinates x: {goal_info['x_axis']}, y: {goal_info['y_axis']}"
         )
 
         # waste time to simulate motion
@@ -77,7 +78,9 @@ class RobotNavigation:
     def _check_preempt(self, poi: str) -> bool:
         if self._as.is_preempt_requested():
             rospy.loginfo(
-                f"{bcolors.OKCYAN}NAVIGATION{bcolors.ENDC}: to {poi} at x: {self._result.x_cord}, y: {self._result.y_cord} has been {bcolors.BOLD}{bcolors.WARNING}PREEMPTED{bcolors.ENDC}"
+                f"{bcolors.OKCYAN}NAVIGATION{bcolors.ENDC}: to {poi} "
+                f"at x: {self._result.x_cord}, y: {self._result.y_cord} "
+                f"has been {bcolors.BOLD}{bcolors.WARNING}PREEMPTED{bcolors.ENDC}"
             )
             self._as.set_preempted()
             return True
@@ -95,12 +98,15 @@ class RobotNavigation:
             if self._result.success:
                 self._as.set_succeeded(self._result)
                 rospy.loginfo(
-                    f"{bcolors.OKCYAN}NAVIGATION{bcolors.ENDC}: to {goal.poi} at x: {self._result.x_cord}, y: {self._result.y_cord} has {bcolors.OKGREEN}{bcolors.BOLD}SUCCEEDED{bcolors.ENDC}"
+                    f"{bcolors.OKCYAN}NAVIGATION{bcolors.ENDC}: to {goal.poi} "
+                    f"at x: {self._result.x_cord}, y: {self._result.y_cord} "
+                    f"has {bcolors.OKGREEN}{bcolors.BOLD}SUCCEEDED{bcolors.ENDC}"
                 )
         else:
             self._as.set_aborted()
             rospy.loginfo(
-                f"{bcolors.OKCYAN}NAVIGATION{bcolors.ENDC} {bcolors.FAIL}{bcolors.BOLD}ABORTED{bcolors.ENDC}: The Given goal location: {goal.poi} does not exist in the Topological Map"
+                f"{bcolors.OKCYAN}NAVIGATION{bcolors.ENDC} {bcolors.FAIL}{bcolors.BOLD}ABORTED{bcolors.ENDC}: "
+                f"The Given goal location: {goal.poi} does not exist in the Topological Map"
             )
 
 
