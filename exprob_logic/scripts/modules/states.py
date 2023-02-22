@@ -20,6 +20,27 @@ from exprob_msgs.msg import (
 def call_robot_controller(
     goal_req: RobotControllerGoal, fail_msg: str, state_name: str
 ) -> RobotControllerResult:
+    """Sends a goal message to the robot controller server
+
+    This function takes a goal message from the execute method of each state
+    and sends it to the robot controller server, if it's unable to make a connection
+    with the robot controller server, it uses the `fail_msg` parameter to return the
+    appropriate failure message, so the state can use it as it's outcome.
+
+    Args:
+        goal_req (RobotControllerGoal): The goal object (message) of a custom generated class
+            to interface with the robot controller server
+        fail_msg (str): a failure message to return to the calling state, so
+            it can use it as the outcome
+        state_name (str): the name of the state being executed to log it
+            to terminal
+
+    Returns:
+        RobotControllerResult: the result of calling the robot controller
+            server, it could either be a direct result from the server or
+            on failure to make a connection with the server a result composed
+            of the failure message given.
+    """
     rospy.loginfo(
         f"{bcolors.OKGREEN}EXECUTING{bcolors.ENDC}: {bcolors.OKCYAN}{state_name} STATE{bcolors.ENDC}"
     )
@@ -44,8 +65,9 @@ def call_robot_controller(
     return ret
 
 
-# color class to highlight log messages.
 class bcolors:
+    """Color class to highlight log messages"""
+
     HEADER = "\033[95m"
     OKBLUE = "\033[94m"
     OKCYAN = "\033[96m"
@@ -63,6 +85,17 @@ class bcolors:
 
 
 class CheckMap(smach.State):
+    """State to check if the map exists
+
+    In this state the `topological_map` parameter server is checked, to see
+    if the topological map of the area to be surveyed already exist.
+    If it exist it can then go on to update the map into the topological_map
+    ontology.
+
+    Args:
+        smach (smach.State): The smach class for initializing the state
+    """
+
     def __init__(self) -> None:
         smach.State.__init__(
             self,
@@ -79,6 +112,20 @@ class CheckMap(smach.State):
         self.action_msg: RobotControllerGoal = RobotControllerGoal()
 
     def execute(self, userdata: Any) -> str:
+        """The method that executes the task of the state
+
+        In here the function for calling the robot controller server is
+        called and the result from the return message is returned as the
+        outcome of the state.
+
+        Args:
+            userdata (Any): The userdata that is passed between states on
+                each states completion
+
+        Returns:
+            str: the outcome of the state which most be one of the possible
+                outcomes given
+        """
         self.action_msg.goal = "check map"
         result: RobotControllerResult = call_robot_controller(
             self.action_msg, "map check failed", state_name=self.__class__.__name__
@@ -88,6 +135,17 @@ class CheckMap(smach.State):
 
 
 class BuildMap(smach.State):
+    """Builds the topological map of the location to be surveyed
+
+    In this state the robot navigates through the given location to
+    be surveyed and builds a topological map or the area which is then
+    being added to the topological_map parameter server for the knowledge_client
+    to take and use to update the topological map ontology
+
+    Args:
+        smach (smach.State): The smach class for initializing the state
+    """
+
     def __init__(self) -> None:
         smach.State.__init__(
             self,
@@ -103,6 +161,21 @@ class BuildMap(smach.State):
         self.action_msg: RobotControllerGoal = RobotControllerGoal()
 
     def execute(self, userdata: Any) -> str:
+        """The method that executes the task of the state
+
+        In here the function for calling the robot controller server is
+        called and the result from the return message is returned as the
+        outcome of the state.
+
+        Args:
+            userdata (Any): The userdata that is passed between states on
+                each states completion
+
+        Returns:
+            str: the outcome of the state which most be one of the possible
+                outcomes given
+        """
+
         self.action_msg.goal = "build map"
         #   NOTE: This state would never be visited for this stage of the project
         #   it is just a place holder for when the map would actually be required
@@ -114,6 +187,16 @@ class BuildMap(smach.State):
 
 
 class UpdateKnowledge(smach.State):
+    """Updates the topological map information into the topological map Ontology
+
+    In this state, the knowledge_client calls the arMOR server through the armor_client
+    and then update the Ontology with the information found in the topological_map
+    parameter server.
+
+    Args:
+        smach (smach.State): The smach class for initializing the state
+    """
+
     def __init__(self) -> None:
         smach.State.__init__(
             self,
@@ -124,6 +207,21 @@ class UpdateKnowledge(smach.State):
         self.action_msg: RobotControllerGoal = RobotControllerGoal()
 
     def execute(self, userdata: Any) -> str:
+        """The method that executes the task of the state
+
+        In here the function for calling the robot controller server is
+        called and the result from the return message is returned as the
+        outcome of the state.
+
+        Args:
+            userdata (Any): The userdata that is passed between states on
+                each states completion
+
+        Returns:
+            str: the outcome of the state which most be one of the possible
+                outcomes given
+        """
+
         self.action_msg.goal = "update topology"
         result: RobotControllerResult = call_robot_controller(
             self.action_msg, "update failed", state_name=self.__class__.__name__
@@ -138,6 +236,20 @@ class UpdateKnowledge(smach.State):
 
 
 class GetNextPointOfInterest(smach.State):
+    """Gets the Next Location for the Robot to Navigate to
+
+    In this state, the next action to be performed is determined based on the
+    result of querying the ontology for reachable and urgent room.
+    -   if there's a reachable and urgent room, the robot navigates there,
+    -   if there are no reachable rooms that are urgent but there's a reachable
+        corridor, the robot navigates to the corridor
+    -   if there's no reachable and urgent room and there's no reachable corridor
+        the robot surveys the current location which it is at (typically a corridor)
+
+    Args:
+        smach (smach.State): The smach class for initializing the state
+    """
+
     def __init__(self) -> None:
         smach.State.__init__(
             self,
@@ -155,6 +267,21 @@ class GetNextPointOfInterest(smach.State):
         self.action_msg: RobotControllerGoal = RobotControllerGoal()
 
     def execute(self, userdata: Any) -> str:
+        """The method that executes the task of the state
+
+        In here the function for calling the robot controller server is
+        called and the result from the return message is returned as the
+        outcome of the state.
+
+        Args:
+            userdata (Any): The userdata that is passed between states on
+                each states completion
+
+        Returns:
+            str: the outcome of the state which most be one of the possible
+                outcomes given
+        """
+
         self.action_msg.goal = "get next poi"
         result: RobotControllerResult = call_robot_controller(
             self.action_msg, "query failed", state_name=self.__class__.__name__
@@ -164,6 +291,15 @@ class GetNextPointOfInterest(smach.State):
 
 
 class GoToRoom(smach.State):
+    """Navigates the robot to the next room of interest
+
+    In this state, the robot navigates to the urgent reachable room that was
+    returned to the controller during the `GetNextPointOfInterest` state
+
+    Args:
+        smach (smach.State): The smach class for initializing the state
+    """
+
     def __init__(self) -> None:
         smach.State.__init__(
             self,
@@ -174,6 +310,21 @@ class GoToRoom(smach.State):
         self.action_msg: RobotControllerGoal = RobotControllerGoal()
 
     def execute(self, userdata: Any) -> str:
+        """The method that executes the task of the state
+
+        In here the function for calling the robot controller server is
+        called and the result from the return message is returned as the
+        outcome of the state.
+
+        Args:
+            userdata (Any): The userdata that is passed between states on
+                each states completion
+
+        Returns:
+            str: the outcome of the state which most be one of the possible
+                outcomes given
+        """
+
         self.action_msg.goal = "goto room"
         result: RobotControllerResult = call_robot_controller(
             self.action_msg, "failed to reach room", state_name=self.__class__.__name__
@@ -183,6 +334,15 @@ class GoToRoom(smach.State):
 
 
 class GoToCorridor(smach.State):
+    """Navigates the robot to the next corridor of interest
+
+    In this state, the robot navigates to the reachable corridor that was
+    returned to the controller during the `GetNextPointOfInterest` state
+
+    Args:
+        smach (smach.State): The smach class for initializing the state
+    """
+
     def __init__(self) -> None:
         smach.State.__init__(
             self,
@@ -198,6 +358,21 @@ class GoToCorridor(smach.State):
         self.action_msg: RobotControllerGoal = RobotControllerGoal()
 
     def execute(self, userdata: Any) -> str:
+        """The method that executes the task of the state
+
+        In here the function for calling the robot controller server is
+        called and the result from the return message is returned as the
+        outcome of the state.
+
+        Args:
+            userdata (Any): The userdata that is passed between states on
+                each states completion
+
+        Returns:
+            str: the outcome of the state which most be one of the possible
+                outcomes given
+        """
+
         self.action_msg.goal = "goto corridor"
         result: RobotControllerResult = call_robot_controller(
             self.action_msg,
@@ -209,6 +384,15 @@ class GoToCorridor(smach.State):
 
 
 class SurveyRoom(smach.State):
+    """Surveys the room for a set amount of time
+
+    In this state the robot surveys the room for a given amount of time, and
+    when it's done, it goes back to surveying the corridor
+
+    Args:
+        smach (smach.State): The smach class for initializing the state
+    """
+
     def __init__(self) -> None:
         smach.State.__init__(
             self,
@@ -219,6 +403,21 @@ class SurveyRoom(smach.State):
         self.action_msg: RobotControllerGoal = RobotControllerGoal()
 
     def execute(self, userdata: Any) -> str:
+        """The method that executes the task of the state
+
+        In here the function for calling the robot controller server is
+        called and the result from the return message is returned as the
+        outcome of the state.
+
+        Args:
+            userdata (Any): The userdata that is passed between states on
+                each states completion
+
+        Returns:
+            str: the outcome of the state which most be one of the possible
+                outcomes given
+        """
+
         self.action_msg.goal = "survey room"
         result: RobotControllerResult = call_robot_controller(
             self.action_msg, "survey failed", state_name=self.__class__.__name__
@@ -228,6 +427,16 @@ class SurveyRoom(smach.State):
 
 
 class SurveyCorridor(smach.State):
+    """Surveys the corridor for a set amount of time
+
+    In this state the robot surveys corridor for a given amount of time, and
+    when it's done, it goes to the `GetNextPointOfInterest` state to figure out
+    what to do next
+
+    Args:
+        smach (smach.State): The smach class for initializing the state
+    """
+
     def __init__(self) -> None:
         smach.State.__init__(
             self,
@@ -238,6 +447,21 @@ class SurveyCorridor(smach.State):
         self.action_msg: RobotControllerGoal = RobotControllerGoal()
 
     def execute(self, userdata: Any) -> str:
+        """The method that executes the task of the state
+
+        In here the function for calling the robot controller server is
+        called and the result from the return message is returned as the
+        outcome of the state.
+
+        Args:
+            userdata (Any): The userdata that is passed between states on
+                each states completion
+
+        Returns:
+            str: the outcome of the state which most be one of the possible
+                outcomes given
+        """
+
         self.action_msg.goal = "survey corridor"
         result: RobotControllerResult = call_robot_controller(
             self.action_msg, "survey failed", state_name=self.__class__.__name__
@@ -252,6 +476,16 @@ class SurveyCorridor(smach.State):
 
 
 class GoToRechargePoint(smach.State):
+    """Navigates the robot to the Recharge Point
+
+    In this state, the robot navigates to the Recharge Point so as to
+    recharge the battery or to stop the surveillance operation, depending
+    on if the battery became low or a stop request was made
+
+    Args:
+        smach (smach.State): The smach class for initializing the state
+    """
+
     def __init__(self) -> None:
         smach.State.__init__(
             self,
@@ -266,6 +500,21 @@ class GoToRechargePoint(smach.State):
         self.action_msg: RobotControllerGoal = RobotControllerGoal()
 
     def execute(self, userdata: Any) -> str:
+        """The method that executes the task of the state
+
+        In here the function for calling the robot controller server is
+        called and the result from the return message is returned as the
+        outcome of the state.
+
+        Args:
+            userdata (Any): The userdata that is passed between states on
+                each states completion
+
+        Returns:
+            str: the outcome of the state which most be one of the possible
+                outcomes given
+        """
+
         self.action_msg.goal = "goto recharge point"
         result: RobotControllerResult = call_robot_controller(
             self.action_msg,
@@ -277,6 +526,15 @@ class GoToRechargePoint(smach.State):
 
 
 class BatteryCharging(smach.State):
+    """Charging the robot battery until it's fully charged (100%)
+
+    In this state the robot charges the battery of the robot till is gets to
+    100%, it can only be preempted by stop request to stop the surveillance.
+
+    Args:
+        smach (smach.State): The smach class for initializing the state
+    """
+
     def __init__(self) -> None:
         smach.State.__init__(
             self,
@@ -287,6 +545,21 @@ class BatteryCharging(smach.State):
         self.action_msg: RobotControllerGoal = RobotControllerGoal()
 
     def execute(self, userdata: Any) -> str:
+        """The method that executes the task of the state
+
+        In here the function for calling the robot controller server is
+        called and the result from the return message is returned as the
+        outcome of the state.
+
+        Args:
+            userdata (Any): The userdata that is passed between states on
+                each states completion
+
+        Returns:
+            str: the outcome of the state which most be one of the possible
+                outcomes given
+        """
+
         self.action_msg.goal = "charge battery"
         result: RobotControllerResult = call_robot_controller(
             self.action_msg,
