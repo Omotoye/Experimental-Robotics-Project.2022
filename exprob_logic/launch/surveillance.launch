@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<launch>
+	<!-- The launch file for the navigation node and the target pose parameter server -->
+	<include file="$(find exprob_navigation)/launch/navigation.launch" />
+
+	<node name="robot_controller" pkg="exprob_control" type="controller.py" output="screen" respawn="false" />
+	<node name="logic" pkg="exprob_logic" type="state_machine.py" output="screen" respawn="false" />
+</launch>
