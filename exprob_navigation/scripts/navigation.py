@@ -90,7 +90,6 @@ class RobotNavigation:
         pass  # this would be implemented in later versions
 
     def execute_cb(self, goal: RobotNavGoal) -> None:
-        print("I received goal from controller")
         # Checking if the Point of Interest exists
         if rospy.has_param(f"/topological_map/{goal.poi}"):
             result: str = self._go_to_poi(goal.poi)
