@@ -18,8 +18,11 @@ from exprob_msgs.msg import (
 
 # Helper function to send goal messages to the RobotController Server
 def call_robot_controller(
-    goal_req: RobotControllerGoal, fail_msg: str
+    goal_req: RobotControllerGoal, fail_msg: str, state_name: str
 ) -> RobotControllerResult:
+    rospy.loginfo(
+        f"{bcolors.OKGREEN}EXECUTING{bcolors.ENDC}: {bcolors.OKCYAN}{state_name} STATE{bcolors.ENDC}"
+    )
     # Creates the SimpleActionClient, passing the type of the action
     ret: RobotControllerResult = RobotControllerResult()
     client: actionlib.SimpleActionClient = actionlib.SimpleActionClient(
@@ -34,13 +37,24 @@ def call_robot_controller(
         client.send_goal(goal_req)
 
     # Waits for the server to finish performing the action.
-    if client.wait_for_server(timeout=timeout) and client.wait_for_result(
-        timeout=timeout
-    ):
+    if client.wait_for_server(timeout=timeout) and client.wait_for_result():
         ret = client.get_result()
     else:
         ret.result = fail_msg
     return ret
+
+
+# color class to highlight log messages.
+class bcolors:
+    HEADER = "\033[95m"
+    OKBLUE = "\033[94m"
+    OKCYAN = "\033[96m"
+    OKGREEN = "\033[92m"
+    WARNING = "\033[93m"
+    FAIL = "\033[91m"
+    ENDC = "\033[0m"
+    BOLD = "\033[1m"
+    UNDERLINE = "\033[4m"
 
 
 ###########################################################################################
@@ -67,7 +81,7 @@ class CheckMap(smach.State):
     def execute(self, userdata: Any) -> str:
         self.action_msg.goal = "check map"
         result: RobotControllerResult = call_robot_controller(
-            self.action_msg, "map check failed"
+            self.action_msg, "map check failed", state_name=self.__class__.__name__
         )
         outcome: str = result.result
         return outcome
@@ -112,7 +126,7 @@ class UpdateKnowledge(smach.State):
     def execute(self, userdata: Any) -> str:
         self.action_msg.goal = "update topology"
         result: RobotControllerResult = call_robot_controller(
-            self.action_msg, "update failed"
+            self.action_msg, "update failed", state_name=self.__class__.__name__
         )
         outcome: str = result.result
         return outcome
@@ -143,7 +157,7 @@ class GetNextPointOfInterest(smach.State):
     def execute(self, userdata: Any) -> str:
         self.action_msg.goal = "get next poi"
         result: RobotControllerResult = call_robot_controller(
-            self.action_msg, "query failed"
+            self.action_msg, "query failed", state_name=self.__class__.__name__
         )
         outcome: str = result.result
         return outcome
@@ -162,7 +176,7 @@ class GoToRoom(smach.State):
     def execute(self, userdata: Any) -> str:
         self.action_msg.goal = "goto room"
         result: RobotControllerResult = call_robot_controller(
-            self.action_msg, "failed to reach room"
+            self.action_msg, "failed to reach room", state_name=self.__class__.__name__
         )
         outcome: str = result.result
         return outcome
@@ -186,7 +200,9 @@ class GoToCorridor(smach.State):
     def execute(self, userdata: Any) -> str:
         self.action_msg.goal = "goto corridor"
         result: RobotControllerResult = call_robot_controller(
-            self.action_msg, "failed to reach corridor"
+            self.action_msg,
+            "failed to reach corridor",
+            state_name=self.__class__.__name__,
         )
         outcome: str = result.result
         return outcome
@@ -205,7 +221,7 @@ class SurveyRoom(smach.State):
     def execute(self, userdata: Any) -> str:
         self.action_msg.goal = "survey room"
         result: RobotControllerResult = call_robot_controller(
-            self.action_msg, "survey failed"
+            self.action_msg, "survey failed", state_name=self.__class__.__name__
         )
         outcome: str = result.result
         return outcome
@@ -224,7 +240,7 @@ class SurveyCorridor(smach.State):
     def execute(self, userdata: Any) -> str:
         self.action_msg.goal = "survey corridor"
         result: RobotControllerResult = call_robot_controller(
-            self.action_msg, "survey failed"
+            self.action_msg, "survey failed", state_name=self.__class__.__name__
         )
         outcome: str = result.result
         return outcome
@@ -252,7 +268,9 @@ class GoToRechargePoint(smach.State):
     def execute(self, userdata: Any) -> str:
         self.action_msg.goal = "goto recharge point"
         result: RobotControllerResult = call_robot_controller(
-            self.action_msg, "failed to reach recharge point"
+            self.action_msg,
+            "failed to reach recharge point",
+            state_name=self.__class__.__name__,
         )
         outcome: str = result.result
         return outcome
@@ -271,7 +289,9 @@ class BatteryCharging(smach.State):
     def execute(self, userdata: Any) -> str:
         self.action_msg.goal = "charge battery"
         result: RobotControllerResult = call_robot_controller(
-            self.action_msg, "battery charging failed"
+            self.action_msg,
+            "battery charging failed",
+            state_name=self.__class__.__name__,
         )
         outcome: str = result.result
         return outcome
