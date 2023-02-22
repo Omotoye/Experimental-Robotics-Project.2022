@@ -1,13 +1,11 @@
 #!/usr/bin/env python
 
+# libaries to create a ros node and action server
 import rospy
-
 import actionlib
 
-# Brings in the SimpleActionClient
-# import actionlib  # would be needed for later versions
 
-# the robot nav service messages
+# the robot navigation action messages
 from exprob_msgs.msg import (
     RobotNavAction,
     RobotNavGoal,
@@ -15,10 +13,12 @@ from exprob_msgs.msg import (
     RobotNavFeedback,
 )
 
-# for wasting time
+# for wasting time, to simulate motion
 import time
 import random
-from typing import Dict, List, Optional, Union
+
+# for type annotation
+from typing import Dict, List, Union
 
 # Type Aliases
 LocationInfo = Dict[str, Union[float, List[str]]]
@@ -39,11 +39,13 @@ class bcolors:
 
 class RobotNavigation:
     # create messages that are used to publish feedback/result
-    _feedback = RobotNavFeedback()  # the feedback cannont be sent for this version
+    _feedback: RobotNavFeedback = (
+        RobotNavFeedback()
+    )  # the feedback cannont be sent for this version
     # of the project since the navigation at this stage is just to waste time.
-    _result = RobotNavResult()
+    _result: RobotNavResult = RobotNavResult()
 
-    def __init__(self, name) -> None:
+    def __init__(self, name: str) -> None:
         self._action_name: str = name
         self._as: actionlib.SimpleActionServer = actionlib.SimpleActionServer(
             self._action_name,
@@ -58,8 +60,10 @@ class RobotNavigation:
         goal_info: LocationInfo = rospy.get_param(f"/topological_map/{poi_req}")
         self._result.x_cord = goal_info["x_axis"]
         self._result.y_cord = goal_info["y_axis"]
+
+        # log the coordinates
         rospy.loginfo(
-            f"Robot Navigating to {poi_req} at coordinates x: {goal_info['x_axis']}, y: {goal_info['y_axis']}"
+            f"{bcolors.OKCYAN}NAVIGATING{bcolors.ENDC}: to {poi_req} at coordinates x: {goal_info['x_axis']}, y: {goal_info['y_axis']}"
         )
 
         # waste time to simulate motion
@@ -73,16 +77,16 @@ class RobotNavigation:
     def _check_preempt(self, poi: str) -> bool:
         if self._as.is_preempt_requested():
             rospy.loginfo(
-                f"Navigation to {poi} at x: {self._result.x_cord}, y: {self._result.y_cord} has been {bcolors.BOLD}{bcolors.WARNING}PREEMPTED{bcolors.ENDC}"
+                f"{bcolors.OKCYAN}NAVIGATION{bcolors.ENDC}: to {poi} at x: {self._result.x_cord}, y: {self._result.y_cord} has been {bcolors.BOLD}{bcolors.WARNING}PREEMPTED{bcolors.ENDC}"
             )
             self._as.set_preempted()
             return True
         return False
 
-    def _handle_feedback(self):
+    def _handle_feedback(self) -> None:
         pass  # this would be implemented in later versions
 
-    def execute_cb(self, goal: RobotNavGoal):
+    def execute_cb(self, goal: RobotNavGoal) -> None:
         print("I received goal from controller")
         # Checking if the Point of Interest exists
         if rospy.has_param(f"/topological_map/{goal.poi}"):
@@ -91,12 +95,12 @@ class RobotNavigation:
             if self._result.success:
                 self._as.set_succeeded(self._result)
                 rospy.loginfo(
-                    f"Navigation to {goal.poi} at x: {self._result.x_cord}, y: {self._result.y_cord} has {bcolors.OKGREEN}{bcolors.BOLD}SUCCEEDED{bcolors.ENDC}"
+                    f"{bcolors.OKCYAN}NAVIGATION{bcolors.ENDC}: to {goal.poi} at x: {self._result.x_cord}, y: {self._result.y_cord} has {bcolors.OKGREEN}{bcolors.BOLD}SUCCEEDED{bcolors.ENDC}"
                 )
         else:
             self._as.set_aborted()
             rospy.loginfo(
-                f"{bcolors.FAIL}{bcolors.BOLD}ABORTED{bcolors.ENDC}: The Given goal location: {goal.poi} does not exist in the Topological Map"
+                f"{bcolors.OKCYAN}NAVIGATION{bcolors.ENDC} {bcolors.FAIL}{bcolors.BOLD}ABORTED{bcolors.ENDC}: The Given goal location: {goal.poi} does not exist in the Topological Map"
             )
 
 
