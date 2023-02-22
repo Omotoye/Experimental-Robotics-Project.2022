@@ -4,7 +4,7 @@
 		<rosparam file="$(find exprob_navigation)/params/topological_map.yaml" command="load" />
 	</group> -->
 
-	<node pkg="armor" type="execute" name="armor_service" args="it.emarolab.armor.ARMORMainService" />
+	<node pkg="armor" type="execute" name="armor_service" args="it.emarolab.armor.ARMORMainService" output="log"/>
 	<node name="knowledge" pkg="exprob_knowledge" type="knowledge_client.py" output="screen"
 		respawn="false" />
 </launch>

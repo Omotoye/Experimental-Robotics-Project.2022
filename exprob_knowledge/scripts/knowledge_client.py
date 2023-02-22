@@ -1,17 +1,22 @@
 #! /usr/bin/env python3
 
-from armor_client import ArmorClient
-from os.path import dirname, realpath
-from typing import Final, Callable, Optional, List, Dict, MutableSet, Union
-from enum import Enum, auto
+import rospy
+
+# helper python libraries 
 import random
 import time
+from os.path import dirname, realpath
 
-import rospy
+# custom messages to create a server that interface with the armor server
 from exprob_msgs.srv import Knowledge, KnowledgeResponse, KnowledgeRequest  # type: ignore[attr-defined]
 
+# messages and modules required to to interface with Armor
+from armor_client import ArmorClient
 from armor_msgs.msg import ArmorDirectiveRes
 from armor_api.armor_exceptions import ArmorServiceInternalError, ArmorServiceCallError  # type: ignore[attr-defined]
+
+# For type annotation 
+from typing import Final, Optional, List, Dict, MutableSet, Union
 
 # Type Aliases
 LocationInfo = Dict[str, Union[float, List[str]]]
@@ -73,7 +78,7 @@ class KnowledgeManager:
             False,
         )  # initializing with buffered manipulation and reasoning
         self.client.utils.mount_on_ref()
-        self.client.utils.set_log_to_terminal(True)
+        self.client.utils.set_log_to_terminal(False)
 
         rospy.Service("/knowledge_srv", Knowledge, self.knowledge_clbk)
         self.response: KnowledgeResponse = KnowledgeResponse()
@@ -94,7 +99,7 @@ class KnowledgeManager:
 
         return self.response
 
-    def _update_topology(self, robot_location) -> None:
+    def _update_topology(self, robot_location: str) -> None:
         if rospy.has_param("/topological_map"):
             topological_map: Final[MapParam] = rospy.get_param("/topological_map")
             for location, location_info in topological_map.items():
@@ -171,9 +176,6 @@ class KnowledgeManager:
     def _update_current_timestamp(self) -> None:
         old_now_timestamp: str = self._get_previous_timestamp()
         new_now_timestamp: str = str(int(time.time()))
-        print(
-            f"\n\nRobot {self.robot_name} last changed location at {old_now_timestamp}, it is now changing it's location at: {new_now_timestamp}\n\n"
-        )
         self.client.manipulation.replace_dataprop_b2_ind(
             dataprop_name="now",
             ind_name=self.robot_name,
@@ -187,9 +189,6 @@ class KnowledgeManager:
     def _update_visited_timestamp(self, location: str) -> None:
         old_visited_timestamp: str = self._get_previous_timestamp(location=location)
         new_visited_timestamp: str = str(int(time.time()))
-        print(
-            f"\n\nLocation {location} was last visited at: {old_visited_timestamp}, it is now being visited at {new_visited_timestamp}\n\n"
-        )
         self.client.manipulation.replace_dataprop_b2_ind(
             dataprop_name="visitedAt",
             ind_name=location,
@@ -237,7 +236,7 @@ class KnowledgeManager:
         response = self.client.query.objectprop_b2_ind("isIn", self.robot_name)
         return response[0] if response else None
 
-    def _update_robot_location(self, new_location) -> None:
+    def _update_robot_location(self, new_location: str) -> None:
         old_robot_location: Optional[str] = self._get_previous_robot_location()
         if old_robot_location:
             self.client.manipulation.replace_objectprop_b2_ind(
@@ -254,12 +253,14 @@ class KnowledgeManager:
         self.client.utils.sync_buffered_reasoner()
         self.response.result = "updated"
 
-    def _update_visited_location(self, visited_location):
+    def _update_visited_location(self, visited_location: str) -> None:
         self._update_visited_timestamp(location=visited_location)
         self.response.result = "updated"
 
     def _initialize_urgency_threshold(self) -> None:
-        old_urgency_threshold: str = self._get_previous_timestamp(urgency_threshold=True)
+        old_urgency_threshold: str = self._get_previous_timestamp(
+            urgency_threshold=True
+        )
         self.client.manipulation.replace_dataprop_b2_ind(
             dataprop_name="urgencyThreshold",
             ind_name=self.robot_name,
