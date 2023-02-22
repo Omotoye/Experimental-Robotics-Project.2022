@@ -1,4 +1,4 @@
-string goal # possible goals: `update state`, `query state`, `stop surveillance` 
+string goal # possible goals: `` -> empty message equivalent to just `query state`, `stop surveillance` 
 float32 battery_level
 bool battery_charging
 string robot_is_in

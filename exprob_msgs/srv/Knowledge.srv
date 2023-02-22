@@ -1,4 +1,4 @@
-string goal # the goal could be `update topology`, `query can-reach`, `query urgent-location`
+string goal # the goal could be `update topology`, `get next poi`, `update now`, `update robot location`, `update visited location`
 string robot_location
 ---
 string result # result of the service required by the knowledge server. 

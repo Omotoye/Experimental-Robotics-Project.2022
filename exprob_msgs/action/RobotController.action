@@ -1,5 +1,5 @@
 # goal definition
-string goal 
+string goal # `check map`, `update topology`, `get next poi`, `goto room`, `goto corridor`, `goto recharge point`, `survey room`, `survey corridor`, `charge battery`
 ---
 # result definition
 string result 

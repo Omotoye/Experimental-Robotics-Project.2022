@@ -1,5 +1,5 @@
 #goal definition
-string poi  # point of interest
+string poi  # point of interest (where to navigate to)
 ---
 #result definition
 bool success 
