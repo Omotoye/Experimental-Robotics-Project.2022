@@ -279,6 +279,7 @@ class Controller:
         # Creates the SimpleActionClient, passing the type of the action
         client = actionlib.SimpleActionClient("robot_navigation", RobotNavAction)
         goal_req = RobotNavGoal()
+        knowledge_req: KnowledgeRequest = KnowledgeRequest()
         goal_req.poi = (
             self._next_room_of_interest
             if location_type == "room"
@@ -294,27 +295,29 @@ class Controller:
         # Waits for the server to finish performing the action.
         # client.wait_for_result()
         while True:
-            if (
-                self.low_battery
-                and self._next_corridor_of_interest != self._recharge_point
-            ) or self.stop_call:
-                client.cancel_goal()
-                self._result.result = (
-                    "battery low"
-                    if (
-                        self.low_battery
-                        and self._next_corridor_of_interest != self._recharge_point
-                    )
-                    else self._result.result
-                )
-                self._result.result = (
-                    "stop call" if self.stop_call else self._result.result
-                )
-                break
+            if self.low_battery or self.stop_call:
+                self._result.result = "stop call" if self.stop_call else "battery low"
+                if location_type == "room":
+                    client.cancel_goal()
+                    break
+                else:
+                    if client.get_state() == GoalStatus.SUCCEEDED:
+                        self._result.result = (
+                            f"at {location_type}"
+                            if location_type == "recharge point" and self.low_battery
+                            else self._result.result
+                        )
+                        self.robot_is_in = goal_req.poi
+                        knowledge_req.goal = "update robot location"
+                        knowledge_req.robot_location = self.robot_is_in
+                        self.call_knowledge_srv(knowledge_req)
+                        break
+                    else:
+                        continue
+
             if client.get_state() == GoalStatus.SUCCEEDED:
                 self._result.result = f"at {location_type}"
                 self.robot_is_in = goal_req.poi
-                knowledge_req: KnowledgeRequest = KnowledgeRequest()
                 knowledge_req.goal = "update robot location"
                 knowledge_req.robot_location = self.robot_is_in
                 self.call_knowledge_srv(knowledge_req)
