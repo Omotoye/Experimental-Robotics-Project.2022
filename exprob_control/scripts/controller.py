@@ -125,39 +125,48 @@ class Controller:
 
     def execute_cb(self, goal: RobotControllerGoal) -> None:
         if goal.goal == "check map":
+            self._result.result = "map check failed"
             self._check_map()
             self._as.set_succeeded(self._result)
 
         elif goal.goal == "update topology":
+            self._result.result = "update failed"
             self._update_topology()
             self._as.set_succeeded(self._result)
 
         elif goal.goal == "get next poi":
+            self._result.result = "query failed"
             self._get_next_poi()
             self._as.set_succeeded(self._result)
 
         elif goal.goal == "goto room":
+            self._result.result = "failed to reach room"
             self._goto_poi("room")
             self._as.set_succeeded(self._result)
 
         elif goal.goal == "goto corridor":
+            self._result.result = "failed to reach corridor"
             self._goto_poi("corridor")
             self._as.set_succeeded(self._result)
 
         elif goal.goal == "goto recharge point":
+            self._result.result = "failed to reach recharge point"
             self._next_corridor_of_interest = self._recharge_point
             self._goto_poi("recharge point")
             self._as.set_succeeded(self._result)
 
         elif goal.goal == "survey room":
+            self._result.result = "survey failed"
             self._survey_location("room")
             self._as.set_succeeded(self._result)
 
         elif goal.goal == "survey corridor":
+            self._result.result = "survey failed"
             self._survey_location("corridor")
             self._as.set_succeeded(self._result)
 
         elif goal.goal == "charge battery":
+            self._result.result = "battery charging failed"
             self._charge_robot_battery()
             self._as.set_succeeded(self._result)
 
