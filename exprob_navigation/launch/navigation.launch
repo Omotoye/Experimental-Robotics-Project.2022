@@ -3,6 +3,6 @@
 	<group ns="topological_map">
 		<rosparam file="$(find exprob_navigation)/params/topological_map.yaml" command="load" />
 	</group>
-	<node name="navigation" pkg="exprob_navigation" type="navigation.py" output="screen"
+	<node name="robot_navigation" pkg="exprob_navigation" type="navigation.py" output="screen"
 		respawn="false" />
 </launch>

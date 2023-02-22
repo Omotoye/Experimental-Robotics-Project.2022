@@ -53,21 +53,21 @@ class Controller:
         self._next_corridor_of_interest: str = ""
         self._next_room_of_interest: str = ""
         self._recharge_point: str = "E"
-        self._as.start()
         self.battery_level: float = 100.0
         self.battery_charging: bool = False
         self.robot_is_in: str = self._recharge_point
         self.low_battery: bool = False
-        self.full_battery: bool = True
         self.stop_call: bool = False
-        rospy.Service("robot_state", RobotState, self.robot_state_clbk)
         self.discharge_rate = rospy.Rate(10)
         self.recharge_rate = rospy.Rate(10)
         self.battery_status_reported = False
+        self._as.start()
+        rospy.Service("robot_state", RobotState, self.robot_state_clbk)
+        self.full_battery: bool = False
         self.battery_manager()
 
     def battery_manager(self) -> None:
-        while True:
+        while not rospy.is_shutdown():
             if self.battery_charging:
                 self.charge_battery()
             else:
@@ -91,6 +91,7 @@ class Controller:
             self.battery_level - 0.06 if self.battery_level - 0.06 > 0 else 0.0
         )
         if self.battery_level < 20.0:
+            self.full_battery = False
             self.low_battery = True
             if not self.battery_status_reported:
                 self.report_robot_status()
@@ -317,4 +318,3 @@ class Controller:
 if __name__ == "__main__":
     rospy.init_node("robot_controller")
     Controller(rospy.get_name())
-    rospy.spin()
