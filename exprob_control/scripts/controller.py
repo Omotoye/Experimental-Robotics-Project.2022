@@ -34,6 +34,19 @@ from exprob_msgs.srv import (  # type: ignore[attr-defined]
 )
 
 
+# color class to highlight log messages.
+class bcolors:
+    HEADER = "\033[95m"
+    OKBLUE = "\033[94m"
+    OKCYAN = "\033[96m"
+    OKGREEN = "\033[92m"
+    WARNING = "\033[93m"
+    FAIL = "\033[91m"
+    ENDC = "\033[0m"
+    BOLD = "\033[1m"
+    UNDERLINE = "\033[4m"
+
+
 class Controller:
     # create messages that are used to publish feedback/result
     # the feedback cannot be sent for this version
@@ -64,6 +77,9 @@ class Controller:
         self._as.start()
         rospy.Service("robot_state", RobotState, self.robot_state_clbk)
         self.full_battery: bool = False
+        rospy.loginfo(
+            f"{bcolors.OKCYAN}ROBOT CONTROLLER{bcolors.ENDC}: initialization completed {bcolors.OKGREEN}SUCCESSFULLY{bcolors.ENDC}"
+        )
         self.battery_manager()
 
     def battery_manager(self) -> None:
@@ -73,7 +89,7 @@ class Controller:
             else:
                 self.discharge_battery()
 
-    def charge_battery(self):
+    def charge_battery(self) -> None:
         self.battery_level = (
             self.battery_level + 1 if self.battery_level + 1 < 100.0 else 100.0
         )
@@ -81,12 +97,15 @@ class Controller:
             self.low_battery = False
             self.battery_status_reported = False
         if self.battery_level == 100.0:
+            rospy.loginfo(
+                f"{bcolors.OKCYAN}BATTERY{bcolors.ENDC}: {bcolors.OKGREEN}Fully Charged (100%){bcolors.ENDC}"
+            )
             self.full_battery = True
             self.battery_charging = False
             self.report_robot_status()
         self.recharge_rate.sleep()
 
-    def discharge_battery(self):
+    def discharge_battery(self) -> None:
         self.battery_level = (
             self.battery_level - 0.06 if self.battery_level - 0.06 > 0 else 0.0
         )
@@ -94,6 +113,9 @@ class Controller:
             self.full_battery = False
             self.low_battery = True
             if not self.battery_status_reported:
+                rospy.loginfo(
+                    f"{bcolors.OKCYAN}BATTERY{bcolors.ENDC}: {bcolors.WARNING}is Low, Below 20%{bcolors.ENDC}"
+                )
                 self.report_robot_status()
                 self.battery_status_reported = True
         self.discharge_rate.sleep()
@@ -101,6 +123,9 @@ class Controller:
     def robot_state_clbk(self, req: RobotStateRequest) -> RobotStateResponse:
         response = RobotStateResponse()
         if req.goal == "stop surveillance":
+            rospy.loginfo(
+                f"{bcolors.OKCYAN}STOP CALL{bcolors.ENDC}: {bcolors.WARNING}STOP of Robot Surveillance has been requested{bcolors.ENDC}"
+            )
             self.stop_call = True
         response.battery_level = self.battery_level
         response.battery_charging = self.battery_charging
@@ -114,13 +139,13 @@ class Controller:
 
     def report_robot_status(self) -> None:
         rospy.loginfo(
-            f"Robot State Report"
+            f"{bcolors.OKCYAN}Robot State Report{bcolors.ENDC}:\n"
             f"\nBattery Level: {self.battery_level}%"
             f"\nBattery Charging: {self.battery_charging}"
             f"\nRobot isIn: {self.robot_is_in}"
             f"\nLow Battery (< 20%): {self.low_battery}"
             f"\nFull Battery (100%): {self.full_battery}"
-            f"\nStop Call: {self.stop_call}"
+            f"\nStop Call: {self.stop_call}\n"
         )
 
     def execute_cb(self, goal: RobotControllerGoal) -> None:
@@ -156,14 +181,19 @@ class Controller:
             self._as.set_succeeded(self._result)
 
         elif goal.goal == "survey room":
+            rospy.loginfo(f"{bcolors.OKCYAN}ROOM SURVEY{bcolors.ENDC}: of Room {self.robot_is_in} has {bcolors.OKGREEN}STARTED{bcolors.ENDC}")
             self._result.result = "survey failed"
             self._survey_location("room")
             self._as.set_succeeded(self._result)
-
+            if self._result.result == "survey completed":
+                rospy.loginfo(f"{bcolors.OKCYAN}ROOM SURVEY{bcolors.ENDC}: of Room {self.robot_is_in} has {bcolors.OKGREEN}COMPLETED{bcolors.ENDC}\n")
         elif goal.goal == "survey corridor":
+            rospy.loginfo(f"{bcolors.OKCYAN}CORRIDOR SURVEY{bcolors.ENDC}: of Corridor {self.robot_is_in} has {bcolors.OKGREEN}STARTED{bcolors.ENDC}")
             self._result.result = "survey failed"
             self._survey_location("corridor")
             self._as.set_succeeded(self._result)
+            if self._result.result == "survey completed":
+                rospy.loginfo(f"{bcolors.OKCYAN}CORRIDOR SURVEY{bcolors.ENDC}: of Corridor {self.robot_is_in} has {bcolors.OKGREEN}COMPLETED{bcolors.ENDC}\n")
 
         elif goal.goal == "charge battery":
             self._result.result = "battery charging failed"
@@ -182,36 +212,40 @@ class Controller:
         self._result.result = "battery low" if self.low_battery else self._result.result
         self._result.result = "stop call" if self.stop_call else self._result.result
 
-    def _update_topology(self):
-        req = KnowledgeRequest()
+    def _update_topology(self) -> None:
+        req: KnowledgeRequest = KnowledgeRequest()
         req.goal = "update topology"
         req.robot_location = self.robot_is_in
+        response: Optional[KnowledgeResponse] = self.call_knowledge_srv(req)
         self._result.result = (
             "knowledge updated"
-            if (self.call_knowledge_srv(req)).result == "updated"
+            if response and response.result == "updated"
             else "update failed"
         )
         self._result.result = "battery low" if self.low_battery else self._result.result
         self._result.result = "stop call" if self.stop_call else self._result.result
 
     def _get_next_poi(self) -> None:
-        req = KnowledgeRequest()
+        req: KnowledgeRequest = KnowledgeRequest()
         req.goal = "get next poi"
-        response: KnowledgeResponse = self.call_knowledge_srv(req)
-        self._next_corridor_of_interest = response.next_corridor_of_interest
-        self._next_room_of_interest = response.next_room_of_interest
-        self._result.result = response.result
+        response: Optional[KnowledgeResponse] = self.call_knowledge_srv(req)
+        self._next_corridor_of_interest = (
+            response.next_corridor_of_interest if response else ""
+        )
+        self._next_room_of_interest = response.next_room_of_interest if response else ""
+        self._result.result = response.result if response else "query failed"
         self._result.result = "battery low" if self.low_battery else self._result.result
         self._result.result = "stop call" if self.stop_call else self._result.result
 
-    def _goto_poi(self, location_type: str):
-        req = KnowledgeRequest()
+    def _goto_poi(self, location_type: str) -> None:
+        req: KnowledgeRequest = KnowledgeRequest()
         req.goal = "update now"
         self.call_knowledge_srv(req)
         self.call_robot_navigator(location_type=location_type)
         self.call_knowledge_srv(req)
 
     def _survey_location(self, location_type: str):
+        # rospy.loginfo(f"{bcolors.OKCYAN}SURVEY{bcolors.ENDC}: of {self._next_room_of_interest if self._next_room_of_interest else self._next_corridor_of_interest} has {bcolors.OKGREEN}Started{bcolors.ENDC}")
         # waste time to simulate surveillance
         for i in range(int(3 if location_type == "room" else 5 * random.random())):
             if self.low_battery or self.stop_call:
@@ -228,6 +262,8 @@ class Controller:
             if not (self.low_battery or self.stop_call)
             else self._result.result
         )
+        # if self._result.result == "survey completed":
+        # rospy.loginfo(f"{bcolors.OKCYAN}SURVEY{bcolors.ENDC}: of {self._next_room_of_interest if self._next_room_of_interest else self._next_corridor_of_interest} has {bcolors.OKGREEN}COMPLETED{bcolors.ENDC}\n")
         if location_type == "room":
             req: KnowledgeRequest = KnowledgeRequest()
             req.goal = "update visited location"
@@ -236,6 +272,9 @@ class Controller:
 
     def _charge_robot_battery(self) -> None:
         self.battery_charging = True
+        rospy.loginfo(
+            f"{bcolors.OKCYAN}BATTERY CHARGING{bcolors.ENDC}: has {bcolors.OKGREEN}Started{bcolors.ENDC}..."
+        )
         while not (self.full_battery or self.stop_call):
             time.sleep(1)
         self._result.result = "battery charged" if self.full_battery else "stop call"
@@ -257,28 +296,10 @@ class Controller:
             rospy.logerr(e)
         return None
 
-    def call_robot_state_srv(
-        self, req: RobotStateRequest
-    ) -> Optional[RobotStateResponse]:
-        try:
-            rospy.wait_for_service("robot_state", 5)
-            robot_state_srv: rospy.ServiceProxy = rospy.ServiceProxy(
-                "robot_state", RobotState
-            )
-            response: RobotStateResponse = robot_state_srv(req)
-            return response
-        except rospy.ServiceException as e:
-            rospy.logerr("Service call failed: {e}".format(e=e))
-        except rospy.ROSException as e:
-            rospy.logerr(f"ROS Exception: {e}")
-        except Exception as e:
-            rospy.logerr(e)
-        return None
-
     def call_robot_navigator(self, location_type: str) -> None:
         # Creates the SimpleActionClient, passing the type of the action
         client = actionlib.SimpleActionClient("robot_navigation", RobotNavAction)
-        goal_req = RobotNavGoal()
+        goal_req: RobotNavGoal = RobotNavGoal()
         knowledge_req: KnowledgeRequest = KnowledgeRequest()
         goal_req.poi = (
             self._next_room_of_interest
