@@ -8,6 +8,10 @@
  **Email: adekoyaomotoye@gmail.com** </br>
  **Student ID: 5066348**
 
+# Description of the Software Architecture 
+## Component Diagram
+<img src="docs/uml_diagram/exprob_uml.png"  title="Component Diagram Version 1" alt="Component Diagram Version 1" >
+
 ## Project Timeline 
 
 ### 25/01/2023
