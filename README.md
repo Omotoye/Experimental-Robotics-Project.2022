@@ -44,10 +44,11 @@
 ### 22/02/2023 - 23/02/2023
  - [x] Refactor the code base for clarity and readability
  - [x] Add proper commenting to the code base. 
-### 23/02/2023
- - [ ] Create a UML diagram of the proposed architecture. 
+### 23/02/2023 - 24/02/2023
+ - [x] Create a UML diagram of the proposed architecture. 
  - [ ] Create the Sequence diagram
- - [ ] Create the State Diagram. 
+ - [x] Create the State Diagram. 
+### 23/02/2023
  - [ ] Add a Sphinx documentation to the repo 
  - [ ] Complete the readme as per assignment requirements. 
 
