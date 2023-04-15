@@ -50,7 +50,9 @@ class bcolors:
     FAIL = "\033[91m"
     ENDC = "\033[0m"
     BOLD = "\033[1m"
+    ITALIC = "\033[3m"
     UNDERLINE = "\033[4m"
+    DIM = "\033[2m"
 
 
 class Controller:

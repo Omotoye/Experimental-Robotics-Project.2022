@@ -66,7 +66,7 @@ def call_robot_controller(
 
 
 class bcolors:
-    """Color class to highlight log messages"""
+    """Color class to higlight log messages."""
 
     HEADER = "\033[95m"
     OKBLUE = "\033[94m"
@@ -76,7 +76,9 @@ class bcolors:
     FAIL = "\033[91m"
     ENDC = "\033[0m"
     BOLD = "\033[1m"
+    ITALIC = "\033[3m"
     UNDERLINE = "\033[4m"
+    DIM = "\033[2m"
 
 
 ###########################################################################################
