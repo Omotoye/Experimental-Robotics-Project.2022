@@ -1,5 +1,30 @@
 #! /usr/bin/env python3
 
+"""
+.. module:: knowledge_client
+    :platform: Unix 
+    :synopsis: Python module that manages and queries the knowledge in the Ontology
+    
+.. moduleauthor:: Omotoye Shamsudeen Adekoya <adekoyaomotoye@gmail.com>
+
+In this module the class ``KnowledgeManager`` takes service message from the ``robot_controller`` node 
+to either update the ontology with some information or query the ontology about some information.
+The class takes care of all the steps to be done to properly update and query the ontology, it also
+keep some information about the current state of the robot to use when updating the ontology in the case
+when it has to replace a fact. 
+
+**Subscribes to:**
+    ``None``
+**Publishes to:**
+    ``None``.
+**Service:**
+    ``/knowledge_srv`` *(server)*:
+        receives a message from the ``robot_controller` node with a goal of what to be done and the information required for the task to be done.
+**Action:**
+    ``None``
+    
+"""
+
 import rospy
 
 # helper python libraries
@@ -29,11 +54,11 @@ class ArmorClientPlus(ArmorClient):
 
     This class inherits from the ArmorClient class in order to add a method that does not exist in the
     ArmorClient into this subclass.
-        The Added method is a manipulation method that disjoint all given individuals
+    The Added method is a manipulation method that disjoint all given individuals
 
     Args:
         ArmorClient (ArmorClient): This is the armor client that was created for the possiblility to integrate
-            with the armor server. It is the base class to this ArmorClientPlus class
+        with the armor server. It is the base class to this ArmorClientPlus class
     """
 
     def __init__(
@@ -296,7 +321,7 @@ class KnowledgeManager:
 
         After a location has been visited by the robot, this method is called
         to update the visited timestamp of the location to the current timestamp
-            This fact and the `now` timestamp of the robot is used by the reasoner
+        This fact and the `now` timestamp of the robot is used by the reasoner
         to determine the location with the `urgency` property
 
         Args:

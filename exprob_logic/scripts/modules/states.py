@@ -1,3 +1,32 @@
+"""
+.. module:: states
+    :platform: Unix 
+    :synopsis: Python module that contains all the states definition for the statemachine 
+    
+.. moduleauthor:: Omotoye Shamsudeen Adekoya <adekoyaomotoye@gmail.com>
+
+In this module the states of the statemachine is defined, the state definition contains
+the proper transition based on the outcomes of the action. 
+
+.. note:: 
+    The action of each state  is not defined in the state definition, in the execution part
+    of the state, an action message is sent to the ``robot_controller`` with the required 
+    goal set and the controller carries out the required goal. The state machine is a node 
+    for describing what the robot should do next and it is inidependent of the action execution.
+
+**Subscribes to:**
+    ``None``
+**Publishes to:**
+    ``None``
+**Service:**
+    ``None``
+**Action:**
+    ``/robot_controller`` *(client)*:
+        sends the required goal to be perform by the robot controller to the robot controller.
+        based on the state at which the state machine is at.
+"""
+
+
 # importing the library for the creation of the states of the state machine
 import smach
 
@@ -20,11 +49,11 @@ from exprob_msgs.msg import (
 def call_robot_controller(
     goal_req: RobotControllerGoal, fail_msg: str, state_name: str
 ) -> RobotControllerResult:
-    """Sends a goal message to the robot controller server
+    """*Sends a goal message to the robot controller server*
 
     This function takes a goal message from the execute method of each state
-    and sends it to the robot controller server, if it's unable to make a connection
-    with the robot controller server, it uses the `fail_msg` parameter to return the
+    and sends it to the ``robot_controller`` server, if it's unable to make a connection
+    with the ``robot_controller`` server, it uses the ``fail_msg`` parameter to return the
     appropriate failure message, so the state can use it as it's outcome.
 
     Args:
@@ -87,9 +116,9 @@ class bcolors:
 
 
 class CheckMap(smach.State):
-    """State to check if the map exists
+    """*State to check if the map exists*
 
-    In this state the `topological_map` parameter server is checked, to see
+    In this state the ``topological_map`` parameter server is checked, to see
     if the topological map of the area to be surveyed already exist.
     If it exist it can then go on to update the map into the topological_map
     ontology.
@@ -114,9 +143,9 @@ class CheckMap(smach.State):
         self.action_msg: RobotControllerGoal = RobotControllerGoal()
 
     def execute(self, userdata: Any) -> str:
-        """The method that executes the task of the state
+        """*The method that executes the task of the state*
 
-        In here the function for calling the robot controller server is
+        In here the function for calling the ``robot_controller`` server is
         called and the result from the return message is returned as the
         outcome of the state.
 
@@ -137,11 +166,11 @@ class CheckMap(smach.State):
 
 
 class BuildMap(smach.State):
-    """Builds the topological map of the location to be surveyed
+    """*Builds the topological map of the location to be surveyed*
 
     In this state the robot navigates through the given location to
     be surveyed and builds a topological map or the area which is then
-    being added to the topological_map parameter server for the knowledge_client
+    being added to the ``topological_map`` parameter server for the ``knowledge_client``
     to take and use to update the topological map ontology
 
     Args:
@@ -163,11 +192,15 @@ class BuildMap(smach.State):
         self.action_msg: RobotControllerGoal = RobotControllerGoal()
 
     def execute(self, userdata: Any) -> str:
-        """The method that executes the task of the state
+        """*The method that executes the task of the state*
 
         In here the function for calling the robot controller server is
         called and the result from the return message is returned as the
         outcome of the state.
+
+        .. important:: This state would never be visited for this stage of the project
+            it is just a place holder for when the map would actually be required
+            to be built in a more complicated version of this project.
 
         Args:
             userdata (Any): The userdata that is passed between states on
@@ -189,10 +222,10 @@ class BuildMap(smach.State):
 
 
 class UpdateKnowledge(smach.State):
-    """Updates the topological map information into the topological map Ontology
+    """*Updates the topological map information into the topological map Ontology*
 
-    In this state, the knowledge_client calls the arMOR server through the armor_client
-    and then update the Ontology with the information found in the topological_map
+    In this state, the ``knowledge_client`` calls the arMOR server through the ``armor_client``
+    and then update the Ontology with the information found in the ``topological_map``
     parameter server.
 
     Args:
@@ -209,7 +242,7 @@ class UpdateKnowledge(smach.State):
         self.action_msg: RobotControllerGoal = RobotControllerGoal()
 
     def execute(self, userdata: Any) -> str:
-        """The method that executes the task of the state
+        """*The method that executes the task of the state*
 
         In here the function for calling the robot controller server is
         called and the result from the return message is returned as the
@@ -238,15 +271,16 @@ class UpdateKnowledge(smach.State):
 
 
 class GetNextPointOfInterest(smach.State):
-    """Gets the Next Location for the Robot to Navigate to
+    """*Gets the Next Location for the Robot to Navigate to*
 
     In this state, the next action to be performed is determined based on the
     result of querying the ontology for reachable and urgent room.
-    -   if there's a reachable and urgent room, the robot navigates there,
-    -   if there are no reachable rooms that are urgent but there's a reachable
-        corridor, the robot navigates to the corridor
-    -   if there's no reachable and urgent room and there's no reachable corridor
-        the robot surveys the current location which it is at (typically a corridor)
+
+    * if there's a reachable and urgent room, the robot navigates there,
+    * if there are no reachable rooms that are urgent but there's a reachable
+      corridor, the robot navigates to the corridor
+    * if there's no reachable and urgent room and there's no reachable corridor
+      the robot surveys the current location which it is at (typically a corridor)
 
     Args:
         smach (smach.State): The smach class for initializing the state
@@ -269,9 +303,9 @@ class GetNextPointOfInterest(smach.State):
         self.action_msg: RobotControllerGoal = RobotControllerGoal()
 
     def execute(self, userdata: Any) -> str:
-        """The method that executes the task of the state
+        """*The method that executes the task of the state*
 
-        In here the function for calling the robot controller server is
+        In here the function for calling the ``robot_controller`` server is
         called and the result from the return message is returned as the
         outcome of the state.
 
@@ -293,10 +327,10 @@ class GetNextPointOfInterest(smach.State):
 
 
 class GoToRoom(smach.State):
-    """Navigates the robot to the next room of interest
+    """*Navigates the robot to the next room of interest*
 
     In this state, the robot navigates to the urgent reachable room that was
-    returned to the controller during the `GetNextPointOfInterest` state
+    returned to the controller during the ``GetNextPointOfInterest`` state
 
     Args:
         smach (smach.State): The smach class for initializing the state
@@ -312,9 +346,9 @@ class GoToRoom(smach.State):
         self.action_msg: RobotControllerGoal = RobotControllerGoal()
 
     def execute(self, userdata: Any) -> str:
-        """The method that executes the task of the state
+        """*The method that executes the task of the state*
 
-        In here the function for calling the robot controller server is
+        In here the function for calling the ``robot_controller`` server is
         called and the result from the return message is returned as the
         outcome of the state.
 
@@ -336,10 +370,10 @@ class GoToRoom(smach.State):
 
 
 class GoToCorridor(smach.State):
-    """Navigates the robot to the next corridor of interest
+    """*Navigates the robot to the next corridor of interest*
 
     In this state, the robot navigates to the reachable corridor that was
-    returned to the controller during the `GetNextPointOfInterest` state
+    returned to the controller during the ``GetNextPointOfInterest`` state
 
     Args:
         smach (smach.State): The smach class for initializing the state
@@ -360,9 +394,9 @@ class GoToCorridor(smach.State):
         self.action_msg: RobotControllerGoal = RobotControllerGoal()
 
     def execute(self, userdata: Any) -> str:
-        """The method that executes the task of the state
+        """*The method that executes the task of the state*
 
-        In here the function for calling the robot controller server is
+        In here the function for calling the ``robot_controller`` server is
         called and the result from the return message is returned as the
         outcome of the state.
 
@@ -386,7 +420,7 @@ class GoToCorridor(smach.State):
 
 
 class SurveyRoom(smach.State):
-    """Surveys the room for a set amount of time
+    """*Surveys the room for a set amount of time*
 
     In this state the robot surveys the room for a given amount of time, and
     when it's done, it goes back to surveying the corridor
@@ -405,9 +439,9 @@ class SurveyRoom(smach.State):
         self.action_msg: RobotControllerGoal = RobotControllerGoal()
 
     def execute(self, userdata: Any) -> str:
-        """The method that executes the task of the state
+        """*The method that executes the task of the state*
 
-        In here the function for calling the robot controller server is
+        In here the function for calling the ``robot_controller`` server is
         called and the result from the return message is returned as the
         outcome of the state.
 
@@ -429,10 +463,10 @@ class SurveyRoom(smach.State):
 
 
 class SurveyCorridor(smach.State):
-    """Surveys the corridor for a set amount of time
+    """*Surveys the corridor for a set amount of time*
 
     In this state the robot surveys corridor for a given amount of time, and
-    when it's done, it goes to the `GetNextPointOfInterest` state to figure out
+    when it's done, it goes to the ``GetNextPointOfInterest`` state to figure out
     what to do next
 
     Args:
@@ -449,9 +483,9 @@ class SurveyCorridor(smach.State):
         self.action_msg: RobotControllerGoal = RobotControllerGoal()
 
     def execute(self, userdata: Any) -> str:
-        """The method that executes the task of the state
+        """*The method that executes the task of the state*
 
-        In here the function for calling the robot controller server is
+        In here the function for calling the ``robot_controller`` server is
         called and the result from the return message is returned as the
         outcome of the state.
 
@@ -478,7 +512,7 @@ class SurveyCorridor(smach.State):
 
 
 class GoToRechargePoint(smach.State):
-    """Navigates the robot to the Recharge Point
+    """*Navigates the robot to the Recharge Point*
 
     In this state, the robot navigates to the Recharge Point so as to
     recharge the battery or to stop the surveillance operation, depending
@@ -502,9 +536,9 @@ class GoToRechargePoint(smach.State):
         self.action_msg: RobotControllerGoal = RobotControllerGoal()
 
     def execute(self, userdata: Any) -> str:
-        """The method that executes the task of the state
+        """*The method that executes the task of the state*
 
-        In here the function for calling the robot controller server is
+        In here the function for calling the ``robot_controller`` server is
         called and the result from the return message is returned as the
         outcome of the state.
 
@@ -528,7 +562,7 @@ class GoToRechargePoint(smach.State):
 
 
 class BatteryCharging(smach.State):
-    """Charging the robot battery until it's fully charged (100%)
+    """*Charging the robot battery until it's fully charged (100%)*
 
     In this state the robot charges the battery of the robot till is gets to
     100%, it can only be preempted by stop request to stop the surveillance.
@@ -547,9 +581,9 @@ class BatteryCharging(smach.State):
         self.action_msg: RobotControllerGoal = RobotControllerGoal()
 
     def execute(self, userdata: Any) -> str:
-        """The method that executes the task of the state
+        """*The method that executes the task of the state*
 
-        In here the function for calling the robot controller server is
+        In here the function for calling the robot_controller server is
         called and the result from the return message is returned as the
         outcome of the state.
 
