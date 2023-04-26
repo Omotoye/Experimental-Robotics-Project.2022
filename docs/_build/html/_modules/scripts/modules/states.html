@@ -1,0 +1,844 @@
+<!doctype html>
+<html class="no-js" lang="en">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../../genindex.html" /><link rel="search" title="Search" href="../../../search.html" />
+
+    <!-- Generated with Sphinx 6.1.3 and Furo 2023.03.27 -->
+        <title>scripts.modules.states - Experimental Robotics Project 2022 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?digest=fad236701ea90a88636c2a8c73b44ae642ed2a53" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  --top_of_page_button: edit;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../../../index.html"><div class="brand">Experimental Robotics Project 2022 1.0.0 documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../../../index.html">
+  
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo" src="../../../_static/genoa_logo.png" alt="Logo"/>
+  </div>
+  
+  <span class="sidebar-brand-text">Experimental Robotics Project 2022 1.0.0 documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../../../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../software_architecture.html">Description of the Software Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../limitations.html">System limitations and Possible Improvements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">How to Install and Run the Project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          <h1>Source code for scripts.modules.states</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">.. module:: states</span>
+<span class="sd">    :platform: Unix </span>
+<span class="sd">    :synopsis: Python module that contains all the states definition for the statemachine </span>
+<span class="sd">    </span>
+<span class="sd">.. moduleauthor:: Omotoye Shamsudeen Adekoya &lt;adekoyaomotoye@gmail.com&gt;</span>
+
+<span class="sd">In this module the states of the statemachine is defined, the state definition contains</span>
+<span class="sd">the proper transition based on the outcomes of the action. </span>
+
+<span class="sd">.. note:: </span>
+<span class="sd">    The action of each state  is not defined in the state definition, in the execution part</span>
+<span class="sd">    of the state, an action message is sent to the ``robot_controller`` with the required </span>
+<span class="sd">    goal set and the controller carries out the required goal. The state machine is a node </span>
+<span class="sd">    for describing what the robot should do next and it is inidependent of the action execution.</span>
+
+<span class="sd">**Subscribes to:**</span>
+<span class="sd">    ``None``</span>
+<span class="sd">**Publishes to:**</span>
+<span class="sd">    ``None``</span>
+<span class="sd">**Service:**</span>
+<span class="sd">    ``None``</span>
+<span class="sd">**Action:**</span>
+<span class="sd">    ``/robot_controller`` *(client)*:</span>
+<span class="sd">        sends the required goal to be perform by the robot controller to the robot controller.</span>
+<span class="sd">        based on the state at which the state machine is at.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<span class="c1"># importing the library for the creation of the states of the state machine</span>
+<span class="kn">import</span> <span class="nn">smach</span>
+
+<span class="c1"># Library for creating an Action Client to connect with the Robot Controller</span>
+<span class="kn">import</span> <span class="nn">rospy</span>
+<span class="kn">import</span> <span class="nn">actionlib</span>
+
+<span class="c1"># for type annotation</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span>
+
+<span class="c1"># The custom action messages created for interfacing with the Robot controller</span>
+<span class="kn">from</span> <span class="nn">exprob_msgs.msg</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">RobotControllerAction</span><span class="p">,</span>
+    <span class="n">RobotControllerGoal</span><span class="p">,</span>
+    <span class="n">RobotControllerResult</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<span class="c1"># Helper function to send goal messages to the RobotController Server</span>
+<div class="viewcode-block" id="call_robot_controller"><a class="viewcode-back" href="../../../api.html#scripts.modules.states.call_robot_controller">[docs]</a><span class="k">def</span> <span class="nf">call_robot_controller</span><span class="p">(</span>
+    <span class="n">goal_req</span><span class="p">:</span> <span class="n">RobotControllerGoal</span><span class="p">,</span> <span class="n">fail_msg</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">state_name</span><span class="p">:</span> <span class="nb">str</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RobotControllerResult</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;*Sends a goal message to the robot controller server*</span>
+
+<span class="sd">    This function takes a goal message from the execute method of each state</span>
+<span class="sd">    and sends it to the ``robot_controller`` server, if it&#39;s unable to make a connection</span>
+<span class="sd">    with the ``robot_controller`` server, it uses the ``fail_msg`` parameter to return the</span>
+<span class="sd">    appropriate failure message, so the state can use it as it&#39;s outcome.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        goal_req (RobotControllerGoal): The goal object (message) of a custom generated class</span>
+<span class="sd">            to interface with the robot controller server</span>
+<span class="sd">        fail_msg (str): a failure message to return to the calling state, so</span>
+<span class="sd">            it can use it as the outcome</span>
+<span class="sd">        state_name (str): the name of the state being executed to log it</span>
+<span class="sd">            to terminal</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        RobotControllerResult: the result of calling the robot controller</span>
+<span class="sd">            server, it could either be a direct result from the server or</span>
+<span class="sd">            on failure to make a connection with the server a result composed</span>
+<span class="sd">            of the failure message given.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">rospy</span><span class="o">.</span><span class="n">loginfo</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">bcolors</span><span class="o">.</span><span class="n">OKGREEN</span><span class="si">}</span><span class="s2">EXECUTING</span><span class="si">{</span><span class="n">bcolors</span><span class="o">.</span><span class="n">ENDC</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">bcolors</span><span class="o">.</span><span class="n">OKCYAN</span><span class="si">}{</span><span class="n">state_name</span><span class="si">}</span><span class="s2"> STATE</span><span class="si">{</span><span class="n">bcolors</span><span class="o">.</span><span class="n">ENDC</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="p">)</span>
+    <span class="c1"># Creates the SimpleActionClient, passing the type of the action</span>
+    <span class="n">ret</span><span class="p">:</span> <span class="n">RobotControllerResult</span> <span class="o">=</span> <span class="n">RobotControllerResult</span><span class="p">()</span>
+    <span class="n">client</span><span class="p">:</span> <span class="n">actionlib</span><span class="o">.</span><span class="n">SimpleActionClient</span> <span class="o">=</span> <span class="n">actionlib</span><span class="o">.</span><span class="n">SimpleActionClient</span><span class="p">(</span>
+        <span class="s2">&quot;robot_controller&quot;</span><span class="p">,</span> <span class="n">RobotControllerAction</span>
+    <span class="p">)</span>
+    <span class="n">timeout</span><span class="p">:</span> <span class="n">rospy</span><span class="o">.</span><span class="n">Duration</span> <span class="o">=</span> <span class="n">rospy</span><span class="o">.</span><span class="n">Duration</span><span class="p">(</span><span class="n">secs</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+
+    <span class="c1"># Waits until the action server has started up and started</span>
+    <span class="c1"># listening for goals.</span>
+    <span class="k">if</span> <span class="n">client</span><span class="o">.</span><span class="n">wait_for_server</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">):</span>
+        <span class="c1"># Sends the goal to the action server.</span>
+        <span class="n">client</span><span class="o">.</span><span class="n">send_goal</span><span class="p">(</span><span class="n">goal_req</span><span class="p">)</span>
+
+    <span class="c1"># Waits for the server to finish performing the action.</span>
+    <span class="k">if</span> <span class="n">client</span><span class="o">.</span><span class="n">wait_for_server</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span> <span class="ow">and</span> <span class="n">client</span><span class="o">.</span><span class="n">wait_for_result</span><span class="p">():</span>
+        <span class="n">ret</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_result</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ret</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="n">fail_msg</span>
+    <span class="k">return</span> <span class="n">ret</span></div>
+
+
+<div class="viewcode-block" id="bcolors"><a class="viewcode-back" href="../../../api.html#scripts.modules.states.bcolors">[docs]</a><span class="k">class</span> <span class="nc">bcolors</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Color class to higlight log messages.&quot;&quot;&quot;</span>
+
+    <span class="n">HEADER</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\033</span><span class="s2">[95m&quot;</span>
+    <span class="n">OKBLUE</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\033</span><span class="s2">[94m&quot;</span>
+    <span class="n">OKCYAN</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\033</span><span class="s2">[96m&quot;</span>
+    <span class="n">OKGREEN</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\033</span><span class="s2">[92m&quot;</span>
+    <span class="n">WARNING</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\033</span><span class="s2">[93m&quot;</span>
+    <span class="n">FAIL</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\033</span><span class="s2">[91m&quot;</span>
+    <span class="n">ENDC</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\033</span><span class="s2">[0m&quot;</span>
+    <span class="n">BOLD</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\033</span><span class="s2">[1m&quot;</span>
+    <span class="n">ITALIC</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\033</span><span class="s2">[3m&quot;</span>
+    <span class="n">UNDERLINE</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\033</span><span class="s2">[4m&quot;</span>
+    <span class="n">DIM</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\033</span><span class="s2">[2m&quot;</span></div>
+
+
+<span class="c1">###########################################################################################</span>
+<span class="c1">###############################     PHASE 1  STATES   #####################################</span>
+<span class="c1">###########################################################################################</span>
+
+
+<div class="viewcode-block" id="CheckMap"><a class="viewcode-back" href="../../../api.html#scripts.modules.states.CheckMap">[docs]</a><span class="k">class</span> <span class="nc">CheckMap</span><span class="p">(</span><span class="n">smach</span><span class="o">.</span><span class="n">State</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;*State to check if the map exists*</span>
+
+<span class="sd">    In this state the ``topological_map`` parameter server is checked, to see</span>
+<span class="sd">    if the topological map of the area to be surveyed already exist.</span>
+<span class="sd">    If it exist it can then go on to update the map into the topological_map</span>
+<span class="sd">    ontology.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        smach (smach.State): The smach class for initializing the state</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">smach</span><span class="o">.</span><span class="n">State</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">outcomes</span><span class="o">=</span><span class="p">[</span>
+                <span class="s2">&quot;no map exist&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;map available&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;map check failed&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;battery low&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;stop call&quot;</span><span class="p">,</span>
+            <span class="p">],</span>
+            <span class="n">output_keys</span><span class="o">=</span><span class="p">[],</span>
+            <span class="n">input_keys</span><span class="o">=</span><span class="p">[],</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">action_msg</span><span class="p">:</span> <span class="n">RobotControllerGoal</span> <span class="o">=</span> <span class="n">RobotControllerGoal</span><span class="p">()</span>
+
+<div class="viewcode-block" id="CheckMap.execute"><a class="viewcode-back" href="../../../api.html#scripts.modules.states.CheckMap.execute">[docs]</a>    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">userdata</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;*The method that executes the task of the state*</span>
+
+<span class="sd">        In here the function for calling the ``robot_controller`` server is</span>
+<span class="sd">        called and the result from the return message is returned as the</span>
+<span class="sd">        outcome of the state.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            userdata (Any): The userdata that is passed between states on</span>
+<span class="sd">                each states completion</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: the outcome of the state which most be one of the possible</span>
+<span class="sd">                outcomes given</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">action_msg</span><span class="o">.</span><span class="n">goal</span> <span class="o">=</span> <span class="s2">&quot;check map&quot;</span>
+        <span class="n">result</span><span class="p">:</span> <span class="n">RobotControllerResult</span> <span class="o">=</span> <span class="n">call_robot_controller</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">action_msg</span><span class="p">,</span> <span class="s2">&quot;map check failed&quot;</span><span class="p">,</span> <span class="n">state_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
+        <span class="p">)</span>
+        <span class="n">outcome</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">result</span>
+        <span class="k">return</span> <span class="n">outcome</span></div></div>
+
+
+<div class="viewcode-block" id="BuildMap"><a class="viewcode-back" href="../../../api.html#scripts.modules.states.BuildMap">[docs]</a><span class="k">class</span> <span class="nc">BuildMap</span><span class="p">(</span><span class="n">smach</span><span class="o">.</span><span class="n">State</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;*Builds the topological map of the location to be surveyed*</span>
+
+<span class="sd">    In this state the robot navigates through the given location to</span>
+<span class="sd">    be surveyed and builds a topological map or the area which is then</span>
+<span class="sd">    being added to the ``topological_map`` parameter server for the ``knowledge_client``</span>
+<span class="sd">    to take and use to update the topological map ontology</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        smach (smach.State): The smach class for initializing the state</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">smach</span><span class="o">.</span><span class="n">State</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">outcomes</span><span class="o">=</span><span class="p">[</span>
+                <span class="s2">&quot;mapping completed&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;mapping failed&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;stop call&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;battery low&quot;</span><span class="p">,</span>
+            <span class="p">],</span>
+            <span class="n">output_keys</span><span class="o">=</span><span class="p">[],</span>
+            <span class="n">input_keys</span><span class="o">=</span><span class="p">[],</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">action_msg</span><span class="p">:</span> <span class="n">RobotControllerGoal</span> <span class="o">=</span> <span class="n">RobotControllerGoal</span><span class="p">()</span>
+
+<div class="viewcode-block" id="BuildMap.execute"><a class="viewcode-back" href="../../../api.html#scripts.modules.states.BuildMap.execute">[docs]</a>    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">userdata</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;*The method that executes the task of the state*</span>
+
+<span class="sd">        In here the function for calling the robot controller server is</span>
+<span class="sd">        called and the result from the return message is returned as the</span>
+<span class="sd">        outcome of the state.</span>
+
+<span class="sd">        .. important:: This state would never be visited for this stage of the project</span>
+<span class="sd">            it is just a place holder for when the map would actually be required</span>
+<span class="sd">            to be built in a more complicated version of this project.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            userdata (Any): The userdata that is passed between states on</span>
+<span class="sd">                each states completion</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: the outcome of the state which most be one of the possible</span>
+<span class="sd">                outcomes given</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">action_msg</span><span class="o">.</span><span class="n">goal</span> <span class="o">=</span> <span class="s2">&quot;build map&quot;</span>
+        <span class="c1">#   NOTE: This state would never be visited for this stage of the project</span>
+        <span class="c1">#   it is just a place holder for when the map would actually be required</span>
+        <span class="c1">#   to be built in a more complicated version of this project.</span>
+        <span class="c1"># result = call_robot_controller(self.action_msg)</span>
+        <span class="c1"># outcome: str = result.result</span>
+        <span class="c1"># return outcome</span>
+        <span class="k">return</span> <span class="s2">&quot;&quot;</span></div></div>
+
+
+<div class="viewcode-block" id="UpdateKnowledge"><a class="viewcode-back" href="../../../api.html#scripts.modules.states.UpdateKnowledge">[docs]</a><span class="k">class</span> <span class="nc">UpdateKnowledge</span><span class="p">(</span><span class="n">smach</span><span class="o">.</span><span class="n">State</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;*Updates the topological map information into the topological map Ontology*</span>
+
+<span class="sd">    In this state, the ``knowledge_client`` calls the arMOR server through the ``armor_client``</span>
+<span class="sd">    and then update the Ontology with the information found in the ``topological_map``</span>
+<span class="sd">    parameter server.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        smach (smach.State): The smach class for initializing the state</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">smach</span><span class="o">.</span><span class="n">State</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">outcomes</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;knowledge updated&quot;</span><span class="p">,</span> <span class="s2">&quot;update failed&quot;</span><span class="p">,</span> <span class="s2">&quot;stop call&quot;</span><span class="p">,</span> <span class="s2">&quot;battery low&quot;</span><span class="p">],</span>
+            <span class="n">output_keys</span><span class="o">=</span><span class="p">[],</span>
+            <span class="n">input_keys</span><span class="o">=</span><span class="p">[],</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">action_msg</span><span class="p">:</span> <span class="n">RobotControllerGoal</span> <span class="o">=</span> <span class="n">RobotControllerGoal</span><span class="p">()</span>
+
+<div class="viewcode-block" id="UpdateKnowledge.execute"><a class="viewcode-back" href="../../../api.html#scripts.modules.states.UpdateKnowledge.execute">[docs]</a>    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">userdata</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;*The method that executes the task of the state*</span>
+
+<span class="sd">        In here the function for calling the robot controller server is</span>
+<span class="sd">        called and the result from the return message is returned as the</span>
+<span class="sd">        outcome of the state.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            userdata (Any): The userdata that is passed between states on</span>
+<span class="sd">                each states completion</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: the outcome of the state which most be one of the possible</span>
+<span class="sd">                outcomes given</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">action_msg</span><span class="o">.</span><span class="n">goal</span> <span class="o">=</span> <span class="s2">&quot;update topology&quot;</span>
+        <span class="n">result</span><span class="p">:</span> <span class="n">RobotControllerResult</span> <span class="o">=</span> <span class="n">call_robot_controller</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">action_msg</span><span class="p">,</span> <span class="s2">&quot;update failed&quot;</span><span class="p">,</span> <span class="n">state_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
+        <span class="p">)</span>
+        <span class="n">outcome</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">result</span>
+        <span class="k">return</span> <span class="n">outcome</span></div></div>
+
+
+<span class="c1">###########################################################################################</span>
+<span class="c1">###############################     PHASE 2  STATES   #####################################</span>
+<span class="c1">###########################################################################################</span>
+
+
+<div class="viewcode-block" id="GetNextPointOfInterest"><a class="viewcode-back" href="../../../api.html#scripts.modules.states.GetNextPointOfInterest">[docs]</a><span class="k">class</span> <span class="nc">GetNextPointOfInterest</span><span class="p">(</span><span class="n">smach</span><span class="o">.</span><span class="n">State</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;*Gets the Next Location for the Robot to Navigate to*</span>
+
+<span class="sd">    In this state, the next action to be performed is determined based on the</span>
+<span class="sd">    result of querying the ontology for reachable and urgent room.</span>
+
+<span class="sd">    * if there&#39;s a reachable and urgent room, the robot navigates there,</span>
+<span class="sd">    * if there are no reachable rooms that are urgent but there&#39;s a reachable</span>
+<span class="sd">      corridor, the robot navigates to the corridor</span>
+<span class="sd">    * if there&#39;s no reachable and urgent room and there&#39;s no reachable corridor</span>
+<span class="sd">      the robot surveys the current location which it is at (typically a corridor)</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        smach (smach.State): The smach class for initializing the state</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">smach</span><span class="o">.</span><span class="n">State</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">outcomes</span><span class="o">=</span><span class="p">[</span>
+                <span class="s2">&quot;reachable urgency room&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;no reachable urgency room&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;no reachable corridor&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;query failed&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;battery low&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;stop call&quot;</span><span class="p">,</span>
+            <span class="p">],</span>
+            <span class="n">output_keys</span><span class="o">=</span><span class="p">[],</span>
+            <span class="n">input_keys</span><span class="o">=</span><span class="p">[],</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">action_msg</span><span class="p">:</span> <span class="n">RobotControllerGoal</span> <span class="o">=</span> <span class="n">RobotControllerGoal</span><span class="p">()</span>
+
+<div class="viewcode-block" id="GetNextPointOfInterest.execute"><a class="viewcode-back" href="../../../api.html#scripts.modules.states.GetNextPointOfInterest.execute">[docs]</a>    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">userdata</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;*The method that executes the task of the state*</span>
+
+<span class="sd">        In here the function for calling the ``robot_controller`` server is</span>
+<span class="sd">        called and the result from the return message is returned as the</span>
+<span class="sd">        outcome of the state.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            userdata (Any): The userdata that is passed between states on</span>
+<span class="sd">                each states completion</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: the outcome of the state which most be one of the possible</span>
+<span class="sd">                outcomes given</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">action_msg</span><span class="o">.</span><span class="n">goal</span> <span class="o">=</span> <span class="s2">&quot;get next poi&quot;</span>
+        <span class="n">result</span><span class="p">:</span> <span class="n">RobotControllerResult</span> <span class="o">=</span> <span class="n">call_robot_controller</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">action_msg</span><span class="p">,</span> <span class="s2">&quot;query failed&quot;</span><span class="p">,</span> <span class="n">state_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
+        <span class="p">)</span>
+        <span class="n">outcome</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">result</span>
+        <span class="k">return</span> <span class="n">outcome</span></div></div>
+
+
+<div class="viewcode-block" id="GoToRoom"><a class="viewcode-back" href="../../../api.html#scripts.modules.states.GoToRoom">[docs]</a><span class="k">class</span> <span class="nc">GoToRoom</span><span class="p">(</span><span class="n">smach</span><span class="o">.</span><span class="n">State</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;*Navigates the robot to the next room of interest*</span>
+
+<span class="sd">    In this state, the robot navigates to the urgent reachable room that was</span>
+<span class="sd">    returned to the controller during the ``GetNextPointOfInterest`` state</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        smach (smach.State): The smach class for initializing the state</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">smach</span><span class="o">.</span><span class="n">State</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">outcomes</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;at room&quot;</span><span class="p">,</span> <span class="s2">&quot;failed to reach room&quot;</span><span class="p">,</span> <span class="s2">&quot;battery low&quot;</span><span class="p">,</span> <span class="s2">&quot;stop call&quot;</span><span class="p">],</span>
+            <span class="n">output_keys</span><span class="o">=</span><span class="p">[],</span>
+            <span class="n">input_keys</span><span class="o">=</span><span class="p">[],</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">action_msg</span><span class="p">:</span> <span class="n">RobotControllerGoal</span> <span class="o">=</span> <span class="n">RobotControllerGoal</span><span class="p">()</span>
+
+<div class="viewcode-block" id="GoToRoom.execute"><a class="viewcode-back" href="../../../api.html#scripts.modules.states.GoToRoom.execute">[docs]</a>    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">userdata</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;*The method that executes the task of the state*</span>
+
+<span class="sd">        In here the function for calling the ``robot_controller`` server is</span>
+<span class="sd">        called and the result from the return message is returned as the</span>
+<span class="sd">        outcome of the state.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            userdata (Any): The userdata that is passed between states on</span>
+<span class="sd">                each states completion</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: the outcome of the state which most be one of the possible</span>
+<span class="sd">                outcomes given</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">action_msg</span><span class="o">.</span><span class="n">goal</span> <span class="o">=</span> <span class="s2">&quot;goto room&quot;</span>
+        <span class="n">result</span><span class="p">:</span> <span class="n">RobotControllerResult</span> <span class="o">=</span> <span class="n">call_robot_controller</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">action_msg</span><span class="p">,</span> <span class="s2">&quot;failed to reach room&quot;</span><span class="p">,</span> <span class="n">state_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
+        <span class="p">)</span>
+        <span class="n">outcome</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">result</span>
+        <span class="k">return</span> <span class="n">outcome</span></div></div>
+
+
+<div class="viewcode-block" id="GoToCorridor"><a class="viewcode-back" href="../../../api.html#scripts.modules.states.GoToCorridor">[docs]</a><span class="k">class</span> <span class="nc">GoToCorridor</span><span class="p">(</span><span class="n">smach</span><span class="o">.</span><span class="n">State</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;*Navigates the robot to the next corridor of interest*</span>
+
+<span class="sd">    In this state, the robot navigates to the reachable corridor that was</span>
+<span class="sd">    returned to the controller during the ``GetNextPointOfInterest`` state</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        smach (smach.State): The smach class for initializing the state</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">smach</span><span class="o">.</span><span class="n">State</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">outcomes</span><span class="o">=</span><span class="p">[</span>
+                <span class="s2">&quot;at corridor&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;failed to reach corridor&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;battery low&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;stop call&quot;</span><span class="p">,</span>
+            <span class="p">],</span>
+            <span class="n">output_keys</span><span class="o">=</span><span class="p">[],</span>
+            <span class="n">input_keys</span><span class="o">=</span><span class="p">[],</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">action_msg</span><span class="p">:</span> <span class="n">RobotControllerGoal</span> <span class="o">=</span> <span class="n">RobotControllerGoal</span><span class="p">()</span>
+
+<div class="viewcode-block" id="GoToCorridor.execute"><a class="viewcode-back" href="../../../api.html#scripts.modules.states.GoToCorridor.execute">[docs]</a>    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">userdata</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;*The method that executes the task of the state*</span>
+
+<span class="sd">        In here the function for calling the ``robot_controller`` server is</span>
+<span class="sd">        called and the result from the return message is returned as the</span>
+<span class="sd">        outcome of the state.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            userdata (Any): The userdata that is passed between states on</span>
+<span class="sd">                each states completion</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: the outcome of the state which most be one of the possible</span>
+<span class="sd">                outcomes given</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">action_msg</span><span class="o">.</span><span class="n">goal</span> <span class="o">=</span> <span class="s2">&quot;goto corridor&quot;</span>
+        <span class="n">result</span><span class="p">:</span> <span class="n">RobotControllerResult</span> <span class="o">=</span> <span class="n">call_robot_controller</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">action_msg</span><span class="p">,</span>
+            <span class="s2">&quot;failed to reach corridor&quot;</span><span class="p">,</span>
+            <span class="n">state_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">outcome</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">result</span>
+        <span class="k">return</span> <span class="n">outcome</span></div></div>
+
+
+<div class="viewcode-block" id="SurveyRoom"><a class="viewcode-back" href="../../../api.html#scripts.modules.states.SurveyRoom">[docs]</a><span class="k">class</span> <span class="nc">SurveyRoom</span><span class="p">(</span><span class="n">smach</span><span class="o">.</span><span class="n">State</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;*Surveys the room for a set amount of time*</span>
+
+<span class="sd">    In this state the robot surveys the room for a given amount of time, and</span>
+<span class="sd">    when it&#39;s done, it goes back to surveying the corridor</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        smach (smach.State): The smach class for initializing the state</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">smach</span><span class="o">.</span><span class="n">State</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">outcomes</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;survey completed&quot;</span><span class="p">,</span> <span class="s2">&quot;survey failed&quot;</span><span class="p">,</span> <span class="s2">&quot;battery low&quot;</span><span class="p">,</span> <span class="s2">&quot;stop call&quot;</span><span class="p">],</span>
+            <span class="n">output_keys</span><span class="o">=</span><span class="p">[],</span>
+            <span class="n">input_keys</span><span class="o">=</span><span class="p">[],</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">action_msg</span><span class="p">:</span> <span class="n">RobotControllerGoal</span> <span class="o">=</span> <span class="n">RobotControllerGoal</span><span class="p">()</span>
+
+<div class="viewcode-block" id="SurveyRoom.execute"><a class="viewcode-back" href="../../../api.html#scripts.modules.states.SurveyRoom.execute">[docs]</a>    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">userdata</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;*The method that executes the task of the state*</span>
+
+<span class="sd">        In here the function for calling the ``robot_controller`` server is</span>
+<span class="sd">        called and the result from the return message is returned as the</span>
+<span class="sd">        outcome of the state.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            userdata (Any): The userdata that is passed between states on</span>
+<span class="sd">                each states completion</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: the outcome of the state which most be one of the possible</span>
+<span class="sd">                outcomes given</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">action_msg</span><span class="o">.</span><span class="n">goal</span> <span class="o">=</span> <span class="s2">&quot;survey room&quot;</span>
+        <span class="n">result</span><span class="p">:</span> <span class="n">RobotControllerResult</span> <span class="o">=</span> <span class="n">call_robot_controller</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">action_msg</span><span class="p">,</span> <span class="s2">&quot;survey failed&quot;</span><span class="p">,</span> <span class="n">state_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
+        <span class="p">)</span>
+        <span class="n">outcome</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">result</span>
+        <span class="k">return</span> <span class="n">outcome</span></div></div>
+
+
+<div class="viewcode-block" id="SurveyCorridor"><a class="viewcode-back" href="../../../api.html#scripts.modules.states.SurveyCorridor">[docs]</a><span class="k">class</span> <span class="nc">SurveyCorridor</span><span class="p">(</span><span class="n">smach</span><span class="o">.</span><span class="n">State</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;*Surveys the corridor for a set amount of time*</span>
+
+<span class="sd">    In this state the robot surveys corridor for a given amount of time, and</span>
+<span class="sd">    when it&#39;s done, it goes to the ``GetNextPointOfInterest`` state to figure out</span>
+<span class="sd">    what to do next</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        smach (smach.State): The smach class for initializing the state</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">smach</span><span class="o">.</span><span class="n">State</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">outcomes</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;survey completed&quot;</span><span class="p">,</span> <span class="s2">&quot;survey failed&quot;</span><span class="p">,</span> <span class="s2">&quot;battery low&quot;</span><span class="p">,</span> <span class="s2">&quot;stop call&quot;</span><span class="p">],</span>
+            <span class="n">output_keys</span><span class="o">=</span><span class="p">[],</span>
+            <span class="n">input_keys</span><span class="o">=</span><span class="p">[],</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">action_msg</span><span class="p">:</span> <span class="n">RobotControllerGoal</span> <span class="o">=</span> <span class="n">RobotControllerGoal</span><span class="p">()</span>
+
+<div class="viewcode-block" id="SurveyCorridor.execute"><a class="viewcode-back" href="../../../api.html#scripts.modules.states.SurveyCorridor.execute">[docs]</a>    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">userdata</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;*The method that executes the task of the state*</span>
+
+<span class="sd">        In here the function for calling the ``robot_controller`` server is</span>
+<span class="sd">        called and the result from the return message is returned as the</span>
+<span class="sd">        outcome of the state.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            userdata (Any): The userdata that is passed between states on</span>
+<span class="sd">                each states completion</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: the outcome of the state which most be one of the possible</span>
+<span class="sd">                outcomes given</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">action_msg</span><span class="o">.</span><span class="n">goal</span> <span class="o">=</span> <span class="s2">&quot;survey corridor&quot;</span>
+        <span class="n">result</span><span class="p">:</span> <span class="n">RobotControllerResult</span> <span class="o">=</span> <span class="n">call_robot_controller</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">action_msg</span><span class="p">,</span> <span class="s2">&quot;survey failed&quot;</span><span class="p">,</span> <span class="n">state_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
+        <span class="p">)</span>
+        <span class="n">outcome</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">result</span>
+        <span class="k">return</span> <span class="n">outcome</span></div></div>
+
+
+<span class="c1">###########################################################################################</span>
+<span class="c1">###############################     PHASE 3  STATES   #####################################</span>
+<span class="c1">###########################################################################################</span>
+
+
+<div class="viewcode-block" id="GoToRechargePoint"><a class="viewcode-back" href="../../../api.html#scripts.modules.states.GoToRechargePoint">[docs]</a><span class="k">class</span> <span class="nc">GoToRechargePoint</span><span class="p">(</span><span class="n">smach</span><span class="o">.</span><span class="n">State</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;*Navigates the robot to the Recharge Point*</span>
+
+<span class="sd">    In this state, the robot navigates to the Recharge Point so as to</span>
+<span class="sd">    recharge the battery or to stop the surveillance operation, depending</span>
+<span class="sd">    on if the battery became low or a stop request was made</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        smach (smach.State): The smach class for initializing the state</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">smach</span><span class="o">.</span><span class="n">State</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">outcomes</span><span class="o">=</span><span class="p">[</span>
+                <span class="s2">&quot;at recharge point&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;failed to reach recharge point&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;stop call&quot;</span><span class="p">,</span>
+            <span class="p">],</span>
+            <span class="n">output_keys</span><span class="o">=</span><span class="p">[],</span>
+            <span class="n">input_keys</span><span class="o">=</span><span class="p">[],</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">action_msg</span><span class="p">:</span> <span class="n">RobotControllerGoal</span> <span class="o">=</span> <span class="n">RobotControllerGoal</span><span class="p">()</span>
+
+<div class="viewcode-block" id="GoToRechargePoint.execute"><a class="viewcode-back" href="../../../api.html#scripts.modules.states.GoToRechargePoint.execute">[docs]</a>    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">userdata</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;*The method that executes the task of the state*</span>
+
+<span class="sd">        In here the function for calling the ``robot_controller`` server is</span>
+<span class="sd">        called and the result from the return message is returned as the</span>
+<span class="sd">        outcome of the state.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            userdata (Any): The userdata that is passed between states on</span>
+<span class="sd">                each states completion</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: the outcome of the state which most be one of the possible</span>
+<span class="sd">                outcomes given</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">action_msg</span><span class="o">.</span><span class="n">goal</span> <span class="o">=</span> <span class="s2">&quot;goto recharge point&quot;</span>
+        <span class="n">result</span><span class="p">:</span> <span class="n">RobotControllerResult</span> <span class="o">=</span> <span class="n">call_robot_controller</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">action_msg</span><span class="p">,</span>
+            <span class="s2">&quot;failed to reach recharge point&quot;</span><span class="p">,</span>
+            <span class="n">state_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">outcome</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">result</span>
+        <span class="k">return</span> <span class="n">outcome</span></div></div>
+
+
+<div class="viewcode-block" id="BatteryCharging"><a class="viewcode-back" href="../../../api.html#scripts.modules.states.BatteryCharging">[docs]</a><span class="k">class</span> <span class="nc">BatteryCharging</span><span class="p">(</span><span class="n">smach</span><span class="o">.</span><span class="n">State</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;*Charging the robot battery until it&#39;s fully charged (100%)*</span>
+
+<span class="sd">    In this state the robot charges the battery of the robot till is gets to</span>
+<span class="sd">    100%, it can only be preempted by stop request to stop the surveillance.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        smach (smach.State): The smach class for initializing the state</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">smach</span><span class="o">.</span><span class="n">State</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">outcomes</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;battery charging failed&quot;</span><span class="p">,</span> <span class="s2">&quot;battery charged&quot;</span><span class="p">,</span> <span class="s2">&quot;stop call&quot;</span><span class="p">],</span>
+            <span class="n">output_keys</span><span class="o">=</span><span class="p">[],</span>
+            <span class="n">input_keys</span><span class="o">=</span><span class="p">[],</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">action_msg</span><span class="p">:</span> <span class="n">RobotControllerGoal</span> <span class="o">=</span> <span class="n">RobotControllerGoal</span><span class="p">()</span>
+
+<div class="viewcode-block" id="BatteryCharging.execute"><a class="viewcode-back" href="../../../api.html#scripts.modules.states.BatteryCharging.execute">[docs]</a>    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">userdata</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;*The method that executes the task of the state*</span>
+
+<span class="sd">        In here the function for calling the robot_controller server is</span>
+<span class="sd">        called and the result from the return message is returned as the</span>
+<span class="sd">        outcome of the state.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            userdata (Any): The userdata that is passed between states on</span>
+<span class="sd">                each states completion</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: the outcome of the state which most be one of the possible</span>
+<span class="sd">                outcomes given</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">action_msg</span><span class="o">.</span><span class="n">goal</span> <span class="o">=</span> <span class="s2">&quot;charge battery&quot;</span>
+        <span class="n">result</span><span class="p">:</span> <span class="n">RobotControllerResult</span> <span class="o">=</span> <span class="n">call_robot_controller</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">action_msg</span><span class="p">,</span>
+            <span class="s2">&quot;battery charging failed&quot;</span><span class="p">,</span>
+            <span class="n">state_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">outcome</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">result</span>
+        <span class="k">return</span> <span class="n">outcome</span></div></div>
+</pre></div>
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          
+          
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2023, Omotoye Shamsudeen Adekoya
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer no-toc">
+      
+      
+      
+    </aside>
+  </div>
+</div><script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/scripts/furo.js"></script>
+    </body>
+</html>

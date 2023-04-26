@@ -1,9 +1,35 @@
 #!/usr/bin/env python
 
+"""
+.. module:: navigation
+    :platform: Unix 
+    :synopsis: Python module that navigates the robot to a given goal location
+    
+.. moduleauthor:: Omotoye Shamsudeen Adekoya <adekoyaomotoye@gmail.com>
+
+In this module the class ``RobotNavigation`` takes action messages from the ``robot_controller`` node 
+of the point of interest to navigate to, the node then gets the coordinates of the point of interest
+and navigates the robot to that coordinate.
+
+.. note:: For this version of the project, the navigation node doesn't actually navigate a robot to the
+    given coordinates, instead it sleeps for a random amount of seconds within the range 1-10 with the function
+    ``time.sleep(rand_num)``
+
+**Subscribes to:**
+    ``None``
+**Publishes to:**
+    ``None``
+**Service:**
+    ``None``
+**Action:**
+    ``/robot_navigation`` *(server):* 
+        receives a goal message of the required point of interest, gets the
+        coordinates to the point of interest and then navigates the robot to that point of interest
+"""
+
 # libaries to create a ros node and action server
 import rospy
 import actionlib
-
 
 # the robot navigation action messages
 from exprob_msgs.msg import (
@@ -43,11 +69,11 @@ class bcolors:
 class RobotNavigation:
     """Navigate the robot to the given point of interest
 
-    This is an action server that takes in a goal point which is dubbed `Point Of Interest (POI)`, the
-    exact coordinate to the POI is taken from the `topological_map` parameter server, for which it does
+    This is an action server that takes in a goal point which is dubbed *Point Of Interest (POI)*, the
+    exact coordinate to the POI is taken from the ``topological_map`` parameter server, for which it does
     some sort of check to see if the given POI is valid, if not it Aborts the goal.
-        The action server is capable of navigating the robot to a location of any type, either `room`,
-    `corridor`, or `recharge point`. While the action server is navigating the robot to the POI, it is
+    The action server is capable of navigating the robot to a location of any type, either ``"room"``,
+    ``"corridor"``, or ``"recharge point"``. While the action server is navigating the robot to the POI, it is
     actively checking for preempt request so as to stop the navigation and set the state of the action
     to preempted and log the preempt action to the terminal.
     """
@@ -83,7 +109,7 @@ class RobotNavigation:
     def _go_to_poi(self, poi_req: str) -> str:
         """Navigates the robot to the given point of interest
 
-        It gets the Locations (POI) coordinates from the `topological_map` parameter
+        It gets the Locations (POI) coordinates from the ``topological_map`` parameter
         server and then navigates the robot to the corresponding coordinates of the given
         POI, which checking if preemption was not requested by the client.
 
@@ -91,7 +117,7 @@ class RobotNavigation:
             poi_req (str): the point of interest that the robot should be navigated to
 
         Returns:
-            str: the result of the navigation, either `goal preempted` or `goal reached`
+            str: the result of the navigation, either ``'goal preempted'`` or ``'goal reached'``
         """
         # get the coordinate corresponding to the point of interest given
         goal_info: LocationInfo = rospy.get_param(f"/topological_map/{poi_req}")
@@ -115,14 +141,14 @@ class RobotNavigation:
     def _check_preempt(self, poi: str) -> bool:
         """Checks if preemtion has been requested by the Client
 
-        If Preemption is requested it returns `True` and logs the status to
-        the terminal otherwise returns `False`
+        If Preemption is requested it returns ``True`` and logs the status to
+        the terminal otherwise returns ``False``
 
         Args:
             poi (str): the point of interest, used for logging if preempt was requested
 
         Returns:
-            bool: `True` if preempt request `False` otherwise
+            bool: ``True`` if preempt request ``False`` otherwise
         """
         if self._as.is_preempt_requested():
             rospy.loginfo(

@@ -1,5 +1,41 @@
 #!/usr/bin/env python3
 
+"""
+.. module:: controller
+    :platform: Unix 
+    :synopsis: Python module that serves as a contrller for the components of the robot architecture
+    
+.. moduleauthor:: Omotoye Shamsudeen Adekoya <adekoyaomotoye@gmail.com>
+
+In this module the class ``Controller`` takes action messages from the state machine and processes the
+message to figure out what node server to call and what information the node would require to carry out
+the goal, it then sends the required information to the node server that is required to carry out the
+action. For this version of the project, only the ``navigation server`` and the ``knowledge server`` is
+required to carry out the task for the simulation senario
+
+.. note:: For this version of the project, most or all of the nodes are more or less place holders to 
+    build the architecture required for the project, for this reason the nodes are not very functional
+    for example the navigation node uses the fun ``time.sleep(sec_to_sleep)`` to waste time in order to 
+    simulate navigation.
+
+**Subscribes to:**
+    ``None``
+**Publishes to:**
+    ``None``
+**Service:**
+    ``/robot_state`` *(server)*: 
+        computes and manages the state of the robot, when a request is sent to
+        it, it responds with the state of the robot eg (``low_battery``, ``robot_isin`` etc), to stop the
+        surveilance action of the robot ``"stop surveillance"`` goal can be sent to this server.
+    ``/knowledge_srv`` *(client)*: 
+        sends updated knowledge information to the knowledge server to update 
+        into the ontology.
+**Action:**
+    ``/robot_navigation`` *(client)*: 
+        sends a goal location to the navigation node for the robot to navigate to.
+"""
+
+
 # for initializing and managing the action server
 import rospy
 import actionlib
@@ -56,18 +92,19 @@ class bcolors:
 
 
 class Controller:
-    """Controls the robot by following instructions given to it by the state machine
+    """*Controls the robot by following instructions given to it by the state machine*
 
     In this Class the Robot Controller server is initialized and waits for commands from
     the statemachine. Based on this command it interacts with the knowledge client or
     Navigation server, to perform the given goal. It also manages the data required for
     the navigation and knowledge node to perform their task.
-        The battery life of the robot is also managed in this class, it's has methods
+
+    The battery life of the robot is also managed in this class, it's has methods
     to discharge or charge the battery based on a given charge and discharge rate.
     It knows when the battery is low or when a stop call is requested, with this
     information, it preempts the navigation if navigating to a room or just send back
-    on outcome of the robot state (battery low, or stop call) to the state machine,
-    which would then transission to the appropriate state to carry out the action required
+    on outcome of the robot state *(battery low, or stop call)* to the state machine,
+    which would then transition to the appropriate state to carry out the action required
     for either of those alerts.
 
     """
@@ -80,15 +117,15 @@ class Controller:
     _result: RobotControllerResult = RobotControllerResult()
 
     def __init__(self, name: str) -> None:
-        """Initializes the Robot controller action server and all the attributes
-        required for the running of the robot controller task.
+        """*Initializes the Robot controller action server and all the attributes
+        required for the running of the robot controller task.*
 
-        It also initializes the `robot_state` service to return the state of the
+        It also initializes the ``robot_state`` service to return the state of the
         robot to a calling client.
 
-        Args:
-            name (str): the name of the robot_controller node with is then used to
-                initialize the name of the robot_controller action server.
+        :param name: the name of the ``robot_controller`` node which is then used to
+            initialize the name of the ``robot_controller`` action server.
+        :type name: str
         """
         self._action_name: str = name
         self._as: actionlib.SimpleActionServer = actionlib.SimpleActionServer(
@@ -118,7 +155,7 @@ class Controller:
 
     def battery_manager(self) -> None:
         """A method that runs in an infinite loop to manage the battery life,
-        either by charging it or discharging it.
+        either by **charging** it or **discharging** it.
         """
         while not rospy.is_shutdown():
             if self.battery_charging:
@@ -127,8 +164,8 @@ class Controller:
                 self.discharge_battery()
 
     def charge_battery(self) -> None:
-        """The methods charges the battery life by a given recharge_rate, then changes the properties of the
-        battery, by setting battery low to false and full battery to true. And it finally logs the
+        """The methods charges the battery life by a given ``recharge_rate``, then changes the properties of the
+        battery, by setting battery low to ``False`` and full battery to ``True``. And it finally logs the
         battery report
         """
         self.battery_level = (
@@ -147,8 +184,8 @@ class Controller:
         self.recharge_rate.sleep()
 
     def discharge_battery(self) -> None:
-        """This method discharges the battery life by a given discharge rate, then changes the properites of the
-        battery, by setting the battery low to false when the battery become less than 20% and logs the
+        """This method discharges the battery life by a given ``discharge_rate``, then changes the properites of the
+        battery, by setting the battery low to ``False`` when the battery become less than 20% and logs the
         battery report.
         """
         self.battery_level = (
@@ -166,22 +203,20 @@ class Controller:
         self.discharge_rate.sleep()
 
     def robot_state_clbk(self, req: RobotStateRequest) -> RobotStateResponse:
-        """Function called to handle the robot state service request from the client.
+        """*Function called to handle the robot state service request from the client.*
 
         This is a callback function that handles the request sent in from the client. The
-        request could either be empty which means a query request or `stop surveillance`
-        which mean to change the stop call property of the robot controller class to `True`
+        request could either be empty which means a query request or ``"stop surveillance"``
+        which mean to change the stop call property of the robot controller class to ``True``
         thereby stopping the robot surveillance. After either of the request it logs the
         robot state to the terminal
 
-        Args:
-            req (RobotStateRequest): the request messages sent to the server from the client
-
-        Returns:
-            RobotStateResponse: the response to the client request, always the success status
-                and the robot_state
+        :param req: the request messages sent to the server from the client
+        :type req: RobotStateRequest
+        :return: the response to the client request, always the success status
+            and the ``robot_state``
+        :rtype: RobotStateResponse
         """
-
         response = RobotStateResponse()
         if req.goal == "stop surveillance":
             rospy.loginfo(
@@ -211,14 +246,14 @@ class Controller:
         )
 
     def execute_cb(self, goal: RobotControllerGoal) -> None:
-        """Execute the goal sent to the robot controller action server.
+        """*Execute the goal sent to the robot controller action server.*
 
         This is the callback function of the robot controller action server, it receives a
-        goal from the statemachine with is then precessed based on requirements and then sent
+        ``goal`` from the statemachine with is then precessed based on requirements and then sent
         to the appropriate node to handle the task
 
-        Args:
-            goal (RobotControllerGoal): the goal message sent from the statemachine
+        :param goal: the goal message sent from the statemachine
+        :type goal: RobotControllerGoal
         """
         if goal.goal == "check map":
             self._result.result = "map check failed"
@@ -280,7 +315,7 @@ class Controller:
             self._as.set_succeeded(self._result)
 
     def _check_map(self) -> None:
-        """This methods handles the requestion of checking if the topological_map
+        """This methods handles the requestion of checking if the ``topological_map``
         parameter server exists
         """
         if rospy.has_param("/topological_map"):
@@ -331,8 +366,8 @@ class Controller:
         """This method takes the location determined from the next point of interest call
         and then navigates there.
 
-        Args:
-            location_type (str): the location type could be 'room', 'corridor', 'reacharge point'
+        :param location_type: the location type could be ``'room'``, ``'corridor'``, ``'reacharge point'``
+        :type location_type: str
         """
         req: KnowledgeRequest = KnowledgeRequest()
         req.goal = "update now"
@@ -345,10 +380,10 @@ class Controller:
         does is to waste time, but in later versions of this project the robot would navigate around
         the given location to survery the location.
 
-        Args:
-            location_type (str): the location type to survey, could be 'room' or 'corridor',
-                this is needed because the time it takes to survery either of this types of
-                location is set to different values.
+        :param location_type: the location type to survey, could be ``'room'`` or ``'corridor'``,
+            this is needed because the time it takes to survery either of this types of
+            location is set to different values.
+        :type location_type: str
         """
         # waste time to simulate surveillance
         for i in range(int(3 if location_type == "room" else 5 * random.random())):
@@ -374,7 +409,7 @@ class Controller:
             self.call_knowledge_srv(req)
 
     def _charge_robot_battery(self) -> None:
-        """This method handles the robot battery charging request, it sets battery charging property to True
+        """This method handles the robot battery charging request, it sets battery charging property to ``True``
         for the battery manager to change state into charging mode. And then it waits until the robot battery
         is charged full till 100% or a stop call is requested.
         """
@@ -390,12 +425,11 @@ class Controller:
     def call_knowledge_srv(self, req: KnowledgeRequest) -> Optional[KnowledgeResponse]:
         """Sends a request to the knowledge manager and receives the response
 
-        Args:
-            req (KnowledgeRequest): the request message sent to the knowledge manager
-
-        Returns:
-            Optional[KnowledgeResponse]: the response from the knowledge manager or None if the
-                call to the knowledge manager failed.
+        :param req: the request message sent to the knowledge manager
+        :type req: KnowledgeRequest
+        :return: the response from the knowledge manager or ``None`` if the
+            call to the knowledge manager failed.
+        :rtype: Optional[KnowledgeResponse]
         """
         try:
             rospy.wait_for_service("/knowledge_srv", 5)
@@ -413,7 +447,7 @@ class Controller:
         return None
 
     def call_robot_navigator(self, location_type: str) -> None:
-        """Sends a goal message to the navigation servera
+        """*Sends a goal message to the navigation servers*
 
         After sending the goal to the navigation server it waits for the result from the
         navigation server, while doing this it also checks for the low battery and stop call
@@ -423,9 +457,9 @@ class Controller:
         If the robot was navigating to the corridor or charging point, the goal is not preempted but the result
         sent to the state machine is the battery low or stop call alert
 
-        Args:
-            location_type (str): the type of location being navigated to, either 'room', 'corridor',
-            or 'charging point'
+        :param location_type: the type of location being navigated to, either ``'room'``, ``'corridor'``,
+            or ``'charging point'``
+        :type location_type: str
         """
         # Creates the SimpleActionClient, passing the type of the action
         client = actionlib.SimpleActionClient("robot_navigation", RobotNavAction)
