@@ -8,6 +8,14 @@
  **Email: adekoyaomotoye@gmail.com** </br>
  **Student ID: 5066348**
 
+## Outline 
+
+* [Introduction](#intro)
+* [Description of the Software Architecture](#desc)
+* [Installation and Running Procedure](#install)
+* [System Limitations and Possible Improvements](#limits)
+
+
 # Description of the Software Architecture 
 ## Component Diagram
 <img src="docs/uml_diagram/exprob_uml.png"  title="Component Diagram Version 1" alt="Component Diagram Version 1" >
@@ -53,3 +61,7 @@
  - [ ] Complete the readme as per assignment requirements. 
 
 _**End of version-1.0.0 of the Project...**_
+
+<a name="intro"/>
+
+## Introduction 
