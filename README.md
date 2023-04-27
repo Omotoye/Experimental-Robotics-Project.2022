@@ -23,45 +23,47 @@
 
 > _read the [docs](https://omotoye.github.io/Experimental-Robotics-Project.2022/index.html) for a more comprehensive detail about the [code-base (api)](https://omotoye.github.io/Experimental-Robotics-Project.2022/api.html). You can find everything contained in this readme and more in the docs..._
 
-<a name="intro"/>
+<a name="intro"></a>
 
 ## Introduction 
 
-<a name="desc"/>
+This project is the first version *(assignment 1)* of the _Experimental Robotics Course_ of a [Robotics Engineering](https://corsi.unige.it/en/corsi/10635) Master's degree at the [University of Genoa](https://unige.it/en/)
+
+<a name="desc"></a>
 
 ## Description of the Software Architecture 
 
-<a name="comp-diag"/>
+<a name="comp-diag"></a>
 
 ### Component Diagram
 
 <img src="docs/uml_diagram/exprob_uml.png"  title="Component Diagram Version 1" alt="Component Diagram Version 1" >
 
-<a name="state-diag"/>
+<a name="state-diag"></a>
 
 ### State Diagram
 
-<a name="seq-diag"/>
+<a name="seq-diag"></a>
 
 ### Sequence Diagram
 
-<a name="install-run"/>
+<a name="install-run"></a>
 
 ## Installation and Running Procedure
 
-<a name="install"/>
+<a name="install"></a>
 
 ### Installation 
 
-<a name="run"/>
+<a name="run"></a>
 
 ### Running 
 
-<a name="limits"/>
+<a name="limits"></a>
 
 ## System Limitations and Possible Improvements
 
-<a name="timeline"/>
+<a name="timeline"></a>
 
 ## Project Timeline 
 
@@ -97,10 +99,10 @@
  - [x] Add proper commenting to the code base. 
 ### 23/02/2023 - 24/02/2023
  - [x] Create a UML diagram of the proposed architecture. 
- - [ ] Create the Sequence diagram
  - [x] Create the State Diagram. 
-### 23/02/2023
+### 25/04/2023 - 27/02/2023
  - [ ] Add a Sphinx documentation to the repo 
+ - [ ] Create the Sequence diagram
  - [ ] Complete the readme as per assignment requirements. 
 
 _**End of version-1.0.0 of the Project...**_
