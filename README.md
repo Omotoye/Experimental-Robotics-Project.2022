@@ -10,15 +10,58 @@
 
 ## Outline 
 
-* [Introduction](#intro)
-* [Description of the Software Architecture](#desc)
-* [Installation and Running Procedure](#install)
-* [System Limitations and Possible Improvements](#limits)
+1. [Introduction](#intro)
+1. [Description of the Software Architecture](#desc)
+    * [Component Diagram](#comp-diag)
+    * [State Diagram](#state-diag) 
+    * [Sequence Diagram](#seq-diag)
+2. [Installation and Running Procedure](#install-run)
+    * [Installation](#install)
+    * [Running](#run)
+3. [System Limitations and Possible Improvements](#limits)
+4. [Project timeline](#timeline)
 
+> _read the [docs](https://omotoye.github.io/Experimental-Robotics-Project.2022/index.html) for a more comprehensive detail about the [code-base (api)](https://omotoye.github.io/Experimental-Robotics-Project.2022/api.html). You can find everything contained in this readme and more in the docs..._
 
-# Description of the Software Architecture 
-## Component Diagram
+<a name="intro"/>
+
+## Introduction 
+
+<a name="desc"/>
+
+## Description of the Software Architecture 
+
+<a name="comp-diag"/>
+
+### Component Diagram
+
 <img src="docs/uml_diagram/exprob_uml.png"  title="Component Diagram Version 1" alt="Component Diagram Version 1" >
+
+<a name="state-diag"/>
+
+### State Diagram
+
+<a name="seq-diag"/>
+
+### Sequence Diagram
+
+<a name="install-run"/>
+
+## Installation and Running Procedure
+
+<a name="install"/>
+
+### Installation 
+
+<a name="run"/>
+
+### Running 
+
+<a name="limits"/>
+
+## System Limitations and Possible Improvements
+
+<a name="timeline"/>
 
 ## Project Timeline 
 
@@ -62,6 +105,3 @@
 
 _**End of version-1.0.0 of the Project...**_
 
-<a name="intro"/>
-
-## Introduction 
