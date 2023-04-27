@@ -19,10 +19,9 @@ when it has to replace a fact.
     ``None``.
 **Service:**
     ``/knowledge_srv`` *(server)*:
-        receives a message from the ``robot_controller` node with a goal of what to be done and the information required for the task to be done.
+        receives a message from the ``robot_controller`` node with a goal of what to be done and the information required for the task to be done. 
 **Action:**
     ``None``
-    
 """
 
 import rospy
