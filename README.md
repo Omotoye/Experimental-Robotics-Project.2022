@@ -25,9 +25,14 @@
 
 <a name="intro"></a>
 
-## Introduction 
+# Introduction 
 
-This project is the first version *(assignment 1)* of the _Experimental Robotics Course_ of a [Robotics Engineering](https://corsi.unige.it/en/corsi/10635) Master's degree at the [University of Genoa](https://unige.it/en/)
+This project is the first version *(assignment 1)* of the _Experimental Robotics Course_ of a [Robotics Engineering](https://corsi.unige.it/en/corsi/10635) Master's degree at the [University of Genoa](https://unige.it/en/). It is a simulation scenario of a surveillance robot being deployed in an indoor environment. The first version covers the creation of the architecture by putting in place some *nodes/components* that don't exactly perform the task that they are specified to carry out but act as a template to be built on in later versions of the project. The architecture also contains some component that does exactly what they are always going to be required to do in the entire lifetime of the architecture. 
+
+**The Surveillance Scenario is as follows;**
+
+The robot is supposed to survey an environment with rooms connected by corridor(s). The robot would move around the corridor until there's a **reachable** room that needs to be **urgently** visited _(i.e. the room has not been visited/surveyed for a while)_, when such a room exists, the robot navigates to that room and survey's the room for a set amount of time and then leaves back to the corridor. if there's no reachable urgent room available after a while of surveying a corridor, the robot moves to any other available corridor if it exists, otherwise, it keeps on surveying the current corridor. This sequence is continued infinitely until the battery of the robot goes low. If the robot battery goes low at any point in this sequence, whatever action the robot had planned to do is preempted and the robot navigates to the charging stations, it remains there until the battery becomes full and then it goes back to surveying the area. There's an ontology node that reasons about things like what rooms are reachable when a room needs to urgently be visited... basically facts about the surveillance scenario. There's also another node that manages the internal state of the robot like the battery life. All of these nodes/components would be described more extensively in the next section. For more information about the specific requirements of the first version of this project *(assignment 1)*, consult the [assignment specification](docs/assignment-specification.pdf) pdf document. 
+
 
 <a name="desc"></a>
 
