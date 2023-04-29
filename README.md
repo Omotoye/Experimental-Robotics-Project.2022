@@ -38,11 +38,169 @@ The robot is supposed to survey an environment with rooms connected by corridor(
 
 ## Description of the Software Architecture 
 
+
 <a name="comp-diag"></a>
 
 ### Component Diagram
 
+The nodes in this architecture are grouped in packages based on the similarities of the functionalities they perform. They would each be highlighted and described comprehensively. 
+
 <img src="docs/uml_diagram/exprob_uml.png"  title="Component Diagram Version 1" alt="Component Diagram Version 1" >
+
+The Software Architecture contains 6 packages, each of which has a specific task to take care of:
+
+1. Behavioural Logic (`exprob_logic`)
+2. Robot Controller (`exprob_control`)
+3. Robot Navigation (`exprob_navigation`)
+4. Knowledge Manager (`exprob_knowledge`)
+5. Custom Messages (`exprob_msgs`)
+6. Armor (`armor`)
+
+#### Behavioural Logic
+
+This package contains the state machine scripts, the scripts were shared into two; the states and logic scripts. In the states script, this is where the state class of each of the state of the state machine is defined (more about the states of the state machine later in the readme). In each state, only one action is performed which is calling the action server in the Robot Controller to perform the task. No type of computation is performed in the state script, it only calls the action to perform the required task per state. It was done this way to define the exact role of the state machine package which is to switch from one state to another. The logic script is where all the transitions and the overall structure of the state machine are defined.
+
+#### Robot Controller 
+
+This package contains the class definition of a Robot Controller; this robot controller has an action server that takes command of action to perform from the state machine. It is in charge of calling each of the components required to perform an action. It is also in charge of storing information about the state of the robot. (ie where the robot is at, the battery life and it's management etc)
+
+#### Robot Navigation 
+
+As the name implies, it is in charge of navigating the robot to a required point of interest. This package has a YAML file called `topological_map.yaml`. This file contains the coordinates of each of the so-called point of interest and what doors are connected to them. It is structured in the format shown below.
+
+```yaml
+E: # Location
+  doors: [D5, D6] # doors connection to the location
+  x_axis: 7.0 # Coordinates of the location. 
+  y_axis: 8.0
+
+C1:
+  doors: [D1, D2, D5, D7]
+  x_axis: 2.0
+  y_axis: 1.0
+R1:
+  doors: [D1]
+  x_axis: 3.5
+  y_axis: 5.5
+# and many more...
+```
+
+The id of the point of interest (ie R1...) is the keyword that is being received by the navigation node from the Robot Controller. The navigation node uses the id to extract the target coordinate (x,y) and navigate to that coordinate. However the navigation has not been implemented in this version of the project, so the navigation only prints this coordinate to the terminal and doesn't do anything with it; for now, it simple waste time for a random amount of seconds (from 1 to 10 sec). 
+
+#### Knowledge Manager
+
+<!-- This package is perhaps the most important part of this project; it contains the Oracle Object and the Knowledge Manager.
+
+From the goal objectives of the project, the oracle is in charge of generating hints for the robot to detect randomly from the rooms, and most importantly, the Oracle has the information about the correct hypothesis for the who, what and where of the killer in the game.
+
+For managing the knowledge in (hint and hypothesis) OWL Ontology is used and to communicate with the Cluedo OWL Ontology, an external package called ARMOR is used. The knowledge manager helps to save and generate the required request message to the ARMOR service to perform actions such as **Update the Ontology, Query the Ontology for Complete and Consistent Hypothesis because this is required to be done with a sequence of commands (for example to add a hint, you have to add, disjoint the hint class, and call the reasoner) the knowledge manager serves as a medium to perform this sequence of action depending on the required task.
+
+When the simulation is started the Oracle which knows all the consistent and complete hypotheses, selects the correct one out of them (randomly) and the robot is supposed to find out what it is by accumulating hints gotten from rooms. The hints are stored in a YAML file with the format shown below, it is then loaded into a parameter server which is called by both the knowledge manager and the oracle object.
+
+hints:
+  - HP0:
+    - who: "Toye"
+    - what: "Knife"
+    - where: "Library"
+  - HP1:
+    - who: "Tom"
+    - what: "Knife"
+    - where: "Ball Room"
+    - what: "Cutlass"
+  - HP2:
+    - who: "Jerry"
+    - where: "Hall"
+# and more...
+ -->
+#### Custom Messages
+
+This package was created specifically for storing all the custom message that was generated for interfacing between components in this project. 
+
+##### Action Messages
+Two action messages was generated: `RobotController.action and `RobotNav.action` 
+
+* `RobotController.action`:
+```bash
+# goal definition
+string goal # `check map`, `update topology`, `get next poi`, `goto room`, `goto corridor`, `goto recharge point`, `survey room`, `survey corridor`, `charge battery`
+---
+# result definition
+string result 
+---
+# feedback
+string task_state # base message that would be changed later based on project requirements. 
+```
+
+The `goal` is the part of the message which the state machine uses to indicate what action the controller should perform. it could be to *check map, update topology, get next poi, goto room* etc. 
+
+The result could be success or failure, 
+
+
+* `RobotNav.action`: 
+```bash
+#goal definition
+string poi  # point of interest (where to navigate to)
+---
+#result definition
+bool success 
+float32 x_cord
+float32 y_cord
+---
+#feedback
+float32 x_cord
+float32 y_cord
+```
+
+The `poi` is the point of interest which represent where the robot should navigate to. The navigation components takes this name and gets the coordinates of the point of interest from the `topological_map.yaml` parameter server. 
+
+The result is sucess as `True` of `False` and the coordinate it just navigated to. 
+
+The feedback is the coordinate where the robot is at in realtime. 
+
+##### Service Messages
+Two service messages: `Knowledge.srv`, `RobotState.srv`
+
+* `Knowledge.srv`: 
+```bash
+string goal # the goal could be `update topology`, `get next poi`, `update now`, `update robot location`, `update visited location`
+string robot_location
+---
+string result # result of the service required by the knowledge server. 
+string next_room_of_interest
+string next_corridor_of_interest
+```
+
+The `goal` could be to update the topology into the ontology, get the next point of interest, updated the current time into the ontology, update the robot location into the ontology and update the visited locations into the ontology. 
+
+Based on the request from the Robot Controller, it can also return a response of the next room or corridor of interest.
+
+* `RobotState.srv`
+
+```bash
+string goal # possible goals: `` -> empty message equivalent to just `query state`, `stop surveillance` 
+float32 battery_level
+bool battery_charging
+string robot_is_in
+bool low_battery
+bool stop_call
+bool full_battery
+---
+bool success
+float32 battery_level
+bool battery_charging
+string robot_is_in
+bool low_battery
+bool stop_call
+bool full_battery
+```
+
+The `goal` could be empty message which is equivalent to `query state` or it could be `stop surveillance` which is the way to stop the surveillance scenario. 
+
+The response to this service is the state of the robot regardless of the request sent to the server. 
+
+#### ARMOR
+
+The ARMOR package is an external package used to communicate with the Cluedo OWL ontology, it is a ROS wrapper that helps to make this communication possible. For more information about ARMOR [click here](https://github.com/EmaroLab/armor)
 
 <a name="state-diag"></a>
 
