@@ -4,3 +4,6 @@
 [submodule "cluerosity"]
 	path = cluerosity
 	url = https://github.com/Omotoye/cluerosity.git
+[submodule "assignment2"]
+	path = assignment2
+	url = https://github.com/CarmineD8/assignment2.git
