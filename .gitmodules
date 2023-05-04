@@ -7,3 +7,6 @@
 [submodule "assignment2"]
 	path = assignment2
 	url = https://github.com/CarmineD8/assignment2.git
+[submodule "aruco_ros"]
+	path = aruco_ros
+	url = https://github.com/CarmineD8/aruco_ros.git
