@@ -1,3 +1,6 @@
 [submodule "armor_py_api"]
 	path = armor_py_api
 	url = https://github.com/EmaroLab/armor_py_api.git
+[submodule "cluerosity"]
+	path = cluerosity
+	url = https://github.com/Omotoye/cluerosity.git
