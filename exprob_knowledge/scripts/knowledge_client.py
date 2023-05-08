@@ -25,6 +25,9 @@ when it has to replace a fact.
 """
 
 import rospy
+from std_msgs.msg import Float64
+from std_msgs.msg import Float32MultiArray
+from assignment2.srv import RoomInformation, RoomInformationRequest # type: ignore[attr-defined]
 
 # helper python libraries
 import random
@@ -40,7 +43,7 @@ from armor_msgs.msg import ArmorDirectiveRes
 from armor_api.armor_exceptions import ArmorServiceInternalError, ArmorServiceCallError  # type: ignore[attr-defined]
 
 # For type annotation
-from typing import Final, Optional, List, Dict, MutableSet, Union
+from typing import Final, Optional, List, Dict, MutableSet, Union, Set 
 
 # Type Aliases
 LocationInfo = Dict[str, Union[float, List[str]]]
@@ -155,10 +158,21 @@ class KnowledgeManager:
         )  # initializing with buffered manipulation and reasoning
         self.client.utils.mount_on_ref()
         self.client.utils.set_log_to_terminal(False)
+        self.marker_ids: Set[int] = set()
 
         rospy.Service("/knowledge_srv", Knowledge, self.knowledge_clbk)
+              
+        self._joint_6_pub = rospy.Publisher(
+            "/cluerosity/joint6_position_controller/command", Float64, queue_size=10
+        )
+        self._joint_7_pub = rospy.Publisher(
+            "/cluerosity/joint7_position_controller/command", Float64, queue_size=10
+        )
         self.response: KnowledgeResponse = KnowledgeResponse()
         self.individuals: MutableSet[str] = set()
+        
+        self.rate = rospy.Rate(10)
+        rospy.Subscriber('/marker_publisher/markers', Float32MultiArray, self._marker_id_clbk)
 
     def knowledge_clbk(self, msg: KnowledgeRequest) -> KnowledgeResponse:
         """Handles the request sent to this knowledge_manager server
@@ -175,7 +189,10 @@ class KnowledgeManager:
             KnowledgeResponse: the result to the request sent by the calling client
         """
         self.response.result = f"{msg.goal} failed"
-        if msg.goal == "update topology":
+        if msg.goal == "build map":
+            self._get_marker_ids()
+            self._get_id_info()
+        elif msg.goal == "update topology":
             self._update_topology(msg.robot_location)
         elif msg.goal == "get next poi":
             self._get_next_point_of_interest()
@@ -187,6 +204,66 @@ class KnowledgeManager:
             self._update_visited_location(msg.robot_location)
 
         return self.response
+    
+    def _marker_id_clbk(self, data):
+        self.marker_ids.update(data.data)
+    
+    def _rotate_round(self):
+        print("Rotating Around")
+        angle = 0.0
+        while angle < 6.1:
+            angle = angle + 0.1
+            self._joint_6_pub.publish(angle)
+            self.rate.sleep()
+            print(f"Joint 6 at {angle}")
+        self._joint_6_pub.publish(0.0)
+        self.rate.sleep()
+        print(f"Joint 6 at {0.0}")
+
+    def _look_down(self):
+        print(f"Looking down")
+        angle = 0.0
+        while angle < 0.8:
+            angle = angle + 0.1
+            self._joint_7_pub.publish(angle)
+            self.rate.sleep()
+
+    def _look_up(self):
+        print("Looking UP") 
+        angle = 1.0
+        while angle > 0.0:
+            angle = angle - 0.1
+            self._joint_7_pub.publish(angle)
+            self.rate.sleep()
+
+    def _get_marker_ids(self):
+        self._rotate_round()
+        self._look_down()
+        self._rotate_round()
+        self._look_up()
+        
+    def _get_id_info(self):
+        print(f"\n\nThe Detected Marker IDs: {self.marker_ids}")
+        rospy.wait_for_service('/room_info')
+        my_service = rospy.ServiceProxy('/room_info', RoomInformation) 
+        req = RoomInformationRequest()
+        for _id in self.marker_ids:
+            req.id = int(float(_id))
+            # print(f"Type: {type(_id)}, ID: {_id}")
+            response = my_service(req)
+            connected_doors = [] 
+            for connection in response.connections:
+                connected_doors.append(connection.through_door)
+            
+            location_info: LocationInfo = {"doors": connected_doors, "x_axis": response.x, "y_axis": response.y}
+            rospy.set_param(f'/topological_map/{response.room}', location_info)
+        
+            # print(f"Room: {response.room}")
+            # print(f"x: {response.x}")
+            # print(f"y: {response.y}")
+        self.response.result = "mapping completed"
+
+
 
     def _update_topology(self, robot_location: str) -> None:
         """Adds the topological map into the topological_map Ontology
@@ -201,7 +278,9 @@ class KnowledgeManager:
             robot_location (str): the location which the robot `isIn`, this is used
                 add the `isIn` property of the robot
         """
+        print(f"\n\nI'm here and about to check if there's a topological map available")
         if rospy.has_param("/topological_map"):
+            print(f"\n\nEverything is fine....\n\n")
             topological_map: Final[MapParam] = rospy.get_param("/topological_map")
             for location, location_info in topological_map.items():
                 self.individuals.add(location)

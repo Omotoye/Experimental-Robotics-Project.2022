@@ -260,6 +260,11 @@ class Controller:
             self._check_map()
             self._as.set_succeeded(self._result)
 
+        if goal.goal == "build map":
+            self._result.result = "mapping failed"
+            self._build_map()
+            self._as.set_succeeded(self._result)
+
         elif goal.goal == "update topology":
             self._result.result = "update failed"
             self._update_topology()
@@ -328,6 +333,19 @@ class Controller:
             self._result.result = "map check failed"
         self._result.result = "battery low" if self.low_battery else self._result.result
         self._result.result = "stop call" if self.stop_call else self._result.result
+
+    def _build_map(self):
+        req: KnowledgeRequest = KnowledgeRequest()
+        req.goal = "build map"
+        response: Optional[KnowledgeResponse] = self.call_knowledge_srv(req)
+        self._result.result = (
+            "mapping completed"
+            if response and response.result == "mapping completed"
+            else "mapping failed"
+        )
+        self._result.result = "battery low" if self.low_battery else self._result.result
+        self._result.result = "stop call" if self.stop_call else self._result.result
+
 
     def _update_topology(self) -> None:
         """This methods handles the request of updating the ontology with the topological

@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<launch>
+    <arg name="rviz_config" default="$(find cluerosity_navigation)/config/move_base.rviz" />
+
+    <include file="$(find cluerosity_description)/launch/display.launch">
+        <arg name="rviz_config" value="$(arg rviz_config)" />
+    </include>
+
+    <include file="$(find cluerosity_gazebo)/launch/gazebo.launch">
+        <arg name="x" value="-6.0" />
+        <arg name="y" value="11.0" />
+        <arg name="sim_world" value="$(find assignment2)/worlds/assignment_world.world" />
+        <!-- <arg name="arm_pose" value="relax arm"/> -->
+        <!-- <arg name="type" value="investigator"/> -->
+    </include>
+
+    <include file="$(find cluerosity_slam)/launch/gmapping.launch" />
+    <include file="$(find cluerosity_navigation)/launch/move_base2.launch" />
+
+    <node name="marker_server" pkg="assignment2" type="marker_server" />
+    
+    <!-- <include file="$(find exprob_knowledge)/launch/knowledge.launch" /> -->
+</launch>

@@ -161,7 +161,8 @@ class CheckMap(smach.State):
         result: RobotControllerResult = call_robot_controller(
             self.action_msg, "map check failed", state_name=self.__class__.__name__
         )
-        outcome: str = result.result
+        # outcome: str = result.result
+        outcome: str = "no map exist"
         return outcome
 
 
@@ -210,15 +211,22 @@ class BuildMap(smach.State):
             str: the outcome of the state which most be one of the possible
                 outcomes given
         """
-
         self.action_msg.goal = "build map"
+        result: RobotControllerResult = call_robot_controller(
+            self.action_msg, "mapping failed", state_name=self.__class__.__name__
+        )
+        outcome: str = result.result
+        return outcome
+
+
+        # self.action_msg.goal = "build map"
         #   NOTE: This state would never be visited for this stage of the project
         #   it is just a place holder for when the map would actually be required
         #   to be built in a more complicated version of this project.
         # result = call_robot_controller(self.action_msg)
         # outcome: str = result.result
         # return outcome
-        return ""
+        # return ""
 
 
 class UpdateKnowledge(smach.State):
