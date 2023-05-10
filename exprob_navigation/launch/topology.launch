@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<launch>
+	<group ns="topological_map">
+		<rosparam file="$(find exprob_navigation)/params/topological_map.yaml" command="load" />
+	</group>
+
+</launch>

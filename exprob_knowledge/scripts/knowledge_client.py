@@ -282,15 +282,28 @@ class KnowledgeManager:
         if rospy.has_param("/topological_map"):
             print(f"\n\nEverything is fine....\n\n")
             topological_map: Final[MapParam] = rospy.get_param("/topological_map")
+            
+            
+            # for location, location_info in topological_map.items():
+            #     print(f"\n\nLocation Name: {location}")
+            #     print(f"\n\nLocation Information: {location_info}")
+            
             for location, location_info in topological_map.items():
+                location = str(location)
                 self.individuals.add(location)
+                print("Omo\n")
                 self._update_visited_location(location)
+                print("Toye\n")
                 for door in location_info["doors"]:  # type: ignore[union-attr]
                     self.client.manipulation.add_objectprop_to_ind(
                         "hasDoor", location, door
                     )
+                    print("sham\n")
                     self.individuals.add(door)
+                    
+                    print("sudeen\n")
             self._update_robot_location(robot_location)
+            print("adekoya\n")
             self._initialize_urgency_threshold()
             if (
                 self.client.disjoint_all_ind(individuals=list(self.individuals))

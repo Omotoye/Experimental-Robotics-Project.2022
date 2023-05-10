@@ -19,5 +19,6 @@
 
     <node name="marker_server" pkg="assignment2" type="marker_server" />
     
+    <node name="marker_publisher" pkg="exprob_knowledge" type="marker_publisher" output="screen"/>
     <!-- <include file="$(find exprob_knowledge)/launch/knowledge.launch" /> -->
 </launch>

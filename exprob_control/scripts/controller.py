@@ -262,7 +262,10 @@ class Controller:
 
         if goal.goal == "build map":
             self._result.result = "mapping failed"
+            # print("Enter that navigation stuff")
+            # time.sleep(10)
             self._build_map()
+            # self._result.result = "mapping completed"
             self._as.set_succeeded(self._result)
 
         elif goal.goal == "update topology":

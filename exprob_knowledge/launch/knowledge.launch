@@ -8,5 +8,5 @@
 	<node name="knowledge" pkg="exprob_knowledge" type="knowledge_client.py" output="screen"
 		respawn="true" />
 	
-    <node name="marker_publisher" pkg="exprob_knowledge" type="marker_publisher" output="screen"/>
+    <!-- <node name="marker_publisher" pkg="exprob_knowledge" type="marker_publisher" output="screen"/> -->
 </launch>
