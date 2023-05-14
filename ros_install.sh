@@ -8,9 +8,8 @@ NC='\033[0m' # No Color
 
 # Prompt user to choose version
 echo -e "${YELLOW}Which version of the package would you like to install?"
-echo -e "1. ${GREEN}v1.0.0${NC}"
-echo -e "2. ${GREEN}v2.0.0${NC}"
-echo -e "${NC}"
+echo -e "1. v1.0.0"
+echo -e "2. v2.0.0${NC}"
 read -p "Enter your choice [1 or 2]: " choice
 
 # Set branch variable based on user's choice
