@@ -10,7 +10,7 @@ NC='\033[0m' # No Color
 echo -e "${YELLOW}Which version of the package would you like to install?"
 echo -e "1. v1.0.0"
 echo -e "2. v2.0.0${NC}"
-read -p "Enter your choice [1 or 2]: " choice
+read -n 1 -p "Enter your choice [1 or 2]: " choice
 
 # Set branch variable based on user's choice
 if [[ $choice -eq 1 ]]; then
