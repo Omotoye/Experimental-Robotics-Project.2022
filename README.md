@@ -219,6 +219,9 @@ The ARMOR package is an external package used to communicate with the Cluedo OWL
 > *NB: The instructions below are meant for packages that are written for ROS Noetic Ninjemys.*
 
 ## Compile
+
+<a name="install"></a>
+
 There are two options to compile this package: 
 
 **Option 1:**
@@ -262,6 +265,8 @@ catkin_make  # or `catkin build` if you want to use catkin build to compile the 
 
 ### Dependencies
 
+>**NB:** *The dependency installation is not included in the installation script, so if you used the installation script you still have to follow the steps below*
+
 This project depends on two external packages
 
 * smach
@@ -278,6 +283,8 @@ sudo apt-get install ros-noetic-smach ros-noetic-smach-ros ros-noetic-executive-
 ```
 
 ## Launch
+
+<a name="run"></a>
 
 Step 1: source the setup.bash file, if you followed the steps above, then you can enter the command below.
 
@@ -321,13 +328,6 @@ rosrun smach_viewer smach_viewer.py
 >__*to see a video of the demo of this project*__ [click here](https://drive.google.com/file/d/13pLY4IIqIsQ1HZv1hQkM_oqDcez-vS5s/view?usp=sharing)
 
 
-<a name="install"></a>
-
-### Installation
-
-<a name="run"></a>
-
-### Running
 
 <a name="limits"></a>
 
