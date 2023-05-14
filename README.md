@@ -286,10 +286,10 @@ sudo apt-get install ros-noetic-smach ros-noetic-smach-ros ros-noetic-executive-
 
 <a name="run"></a>
 
-Step 1: source the setup.bash file, if you followed the steps above, then you can enter the command below.
+Step 1: Open two terminal and source the setup.bash file in the both of them, if you followed the steps above or you used the installation script, then you can enter the command below.
 
 ```bash
-source ~/ros_ws/devel/setup.bash
+source ~/catkin_ws/devel/setup.bash
 ```
 
 If you didn't follow the initial steps because you already have a workspace, trace a path from your home directory to your catkin workspace down to your setup.bash file. An example is shown below, ***THIS WILL NOT WORK FOR YOU, IT IS JUST AN EXAMPLE TO SHOW HOW IT CAN BE DONE***
@@ -298,28 +298,23 @@ If you didn't follow the initial steps because you already have a workspace, tra
 source /home/omotoye/catkin_ws/devel/setup.bash
 ```
 
-Step 2: run the **ros master**
+
+Step 2: run the **knowledge Package** launch file
 
 ```bash
-roscore & # the & symbol allows the process to be run as a background process  
+roslaunch exprob_knowledge knowledge.launch
 ```
 
-Step 3: run the **armor** server
+Step 3: run the **Surveillance** launch file in the second terminal, this would run all the remaining required nodes and load all the required YAML files in the parameter server.
 
 ```bash
-rosrun armor execute it.emarolab.armor.ARMORMainService
-```
-
-Step 4: run the **Cluedo** launch file; this launch file will run all the required nodes and load all the required YAML files in a parameter server.
-
-```bash
-roslaunch exprob_logic cluedo.launch
+roslaunch exprob_logic surveillance.launch
 ```
 
 If all the above steps for compiling were done right the simulation should start.
 
 **Optional:**
-if you want to view the state transitions of the state machine with smach viewer, run the command below ***this would only work if you've fixed the problem with smach viewer and ros noetic***
+if you want to view the state transitions of the state machine with smach viewer, run the command below in a new terminal
 
 ```bash
 rosrun smach_viewer smach_viewer.py
