@@ -219,6 +219,24 @@ The ARMOR package is an external package used to communicate with the Cluedo OWL
 > *NB: The instructions below are meant for packages that are written for ROS Noetic Ninjemys.*
 
 ## Compile
+There are two options to compile this package: 
+
+**Option 1:**
+Download the installation script and run with the command below
+
+```bash
+# Download the script 
+wget https://raw.githubusercontent.com/Omotoye/Experimental-Robotics-Project.2022/main/ros_install.sh
+
+# make the script executable 
+chmod +x ros_install.sh
+
+# run the script
+./ros_install.sh # follow the instruction, by entering `1` for version 1 of this project.
+```
+
+**Option 2:** 
+Do the compilation yourself :(
 
 First, you create a folder for your catkin workspace
 
