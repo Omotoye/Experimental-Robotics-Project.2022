@@ -6,11 +6,28 @@ YELLOW='\033[1;33m'
 RED='\033[0;31m'
 NC='\033[0m' # No Color
 
-# Prompt user to choose version
-echo -e "${YELLOW}Which version of the package would you like to install?"
-echo -e "1. v1.0.0"
-echo -e "2. v2.0.0${NC}"
-read -n 1 -p "Enter your choice [1 or 2]: " choice
+# Check for user's input
+valid_input=false
+while [ "$valid_input" == false ]; do
+    # Prompt user to choose version
+    echo -e "${YELLOW}Which version of the package would you like to install?"
+    echo -e "1. v1.0.0"
+    echo -e "2. v2.0.0${NC}"
+    read -n 1 -p "Enter your choice [1 or 2]: " choice
+    case $choice in
+        1)
+            branch="v1.0.0"
+            valid_input=true
+        ;;
+        2)
+            branch="v2.0.0"
+            valid_input=true
+        ;;
+        *)
+            echo "Invalid choice. Please choose 1 or 2."
+        ;;
+    esac
+done
 
 # Set branch variable based on user's choice
 if [[ $choice -eq 1 ]]; then
