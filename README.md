@@ -344,6 +344,8 @@ if you want to view the state transitions of the state machine with smach viewer
 rosrun smach_viewer smach_viewer.py
 ```
 
+> **Note**   
+> __*To see a video of the demo of this project, [click here](https://drive.google.com/file/d/19uo-zW0Vr0RZMvk7hEIi-tVOZqdP1yqM/view?usp=share_link)*__
 <a name="limits"></a>
 
 ## System Limitations and Possible Improvements
