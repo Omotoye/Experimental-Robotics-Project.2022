@@ -5,7 +5,7 @@
 <h1 align="center"> Experimental Robotics Lab Project 2022 </h1>
 
 >**Author:** *Omotoye Shamsudeen Adekoya*  
->**Email:** *<adekoyaomotoye@gmail.com>*
+>**Email:** *<adekoyaomotoye@gmail.com>* 
 >**Student ID:** *5066348*
 
 ## Outline
@@ -268,6 +268,7 @@ catkin_make  # or `catkin build` if you want to use catkin build to compile the 
 ### Dependencies
 
 > **Warning**
+> 
 > The dependency installation is **not included** in the installation script, so if you used the installation script you still have to follow the steps below
 
 This project depends on two external packages
@@ -277,7 +278,7 @@ This project depends on two external packages
 
 To install **armor** consult the [armor](https://github.com/EmaroLab/armor) installation repository
 
-> **Note**
+> **Note** 
 > Follow the instructions in this [issue page](https://github.com/EmaroLab/armor/issues/7) to install `armor` for `noetic devel`
 
 Run the command below to install **smach**
