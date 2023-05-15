@@ -205,9 +205,12 @@ The response to this service is the state of the robot regardless of the request
 
 The ARMOR package is an external package used to communicate with the Cluedo OWL ontology, it is a ROS wrapper that helps to make this communication possible. For more information about ARMOR [click here](https://github.com/EmaroLab/armor)
 
-<a name="state-diag"></a>
 
 ### State Diagram
+
+<a name="state-diag"></a>
+
+<img src="img/state_diagram.png"  title="Component Diagram Version 1" alt="Component Diagram Version 1" >
 
 <a name="seq-diag"></a>
 
