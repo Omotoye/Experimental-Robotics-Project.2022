@@ -244,13 +244,13 @@ Do the compilation yourself :(
 First, you create a folder for your catkin workspace
 
 ```bash
-mkdir -p ~/catkin_ws/src
+mkdir -p ~/exprob_ws/src
 ```
 
 Clone the package repository
 
 ```bash
-cd ~/ros_ws/src
+cd ~/exprob_ws/src
 git clone https://github.com/Omotoye/Experimental-Robotics-Project.2022.git
 git checkout v1.0.0
 ```
@@ -259,7 +259,7 @@ Once the package has been successfully cloned, you then build the workspace
 
 ```bash
 source /opt/ros/noetic/setup.bash
-cd ~/catkin_ws/
+cd ~/exprob_ws/
 catkin_make  # or `catkin build` if you want to use catkin build to compile the workspace
 ```
 
@@ -286,10 +286,27 @@ sudo apt-get install ros-noetic-smach ros-noetic-smach-ros ros-noetic-executive-
 
 <a name="run"></a>
 
-Step 1: Open two terminal and source the setup.bash file in the both of them, if you followed the steps above or you used the installation script, then you can enter the command below.
+There are two options to launch this project:  
+
+**Option 1:**
+
+Use the launch script in the working directory of the project with this command below
+> **NB:** *if you didn't use the installation script or didnt use the workspace name as prescribed in the instruction, this script wont work*
 
 ```bash
-source ~/catkin_ws/devel/setup.bash
+~/exprob_ws/src/Experimental-Robotics-Project.2022/launch_exprob.sh 
+```
+
+> **NB:** *it is generally not good practise to using shell script to run `ros package`, since it defeats the essence of `launch files`, however in this case where we need to launch different terminal applications, an argument can be made in it's defence* 
+
+**Option 2:** 
+
+Launch all the packages yourself :(
+
+Step 1: Open two terminal and source the `setup.bash` file in the both of them, if you followed the steps above or you used the installation script, then you can enter the command below.
+
+```bash
+source ~/exprob_ws/devel/setup.bash
 ```
 
 If you didn't follow the initial steps because you already have a workspace, trace a path from your home directory to your catkin workspace down to your setup.bash file. An example is shown below, ***THIS WILL NOT WORK FOR YOU, IT IS JUST AN EXAMPLE TO SHOW HOW IT CAN BE DONE***
@@ -298,8 +315,7 @@ If you didn't follow the initial steps because you already have a workspace, tra
 source /home/omotoye/catkin_ws/devel/setup.bash
 ```
 
-
-Step 2: run the **knowledge Package** launch file
+Step 2: run the **knowledge Package** launch file in the first terminal, this would run the `ArmorService` and the `knowledge_client` nodes
 
 ```bash
 roslaunch exprob_knowledge knowledge.launch
@@ -319,10 +335,6 @@ if you want to view the state transitions of the state machine with smach viewer
 ```bash
 rosrun smach_viewer smach_viewer.py
 ```
-
->__*to see a video of the demo of this project*__ [click here](https://drive.google.com/file/d/13pLY4IIqIsQ1HZv1hQkM_oqDcez-vS5s/view?usp=sharing)
-
-
 
 <a name="limits"></a>
 
