@@ -23,29 +23,29 @@ else
 fi
 
 # Check if workspace exists
-if [[ ! -d ~/ros_ws ]]; then
+if [[ ! -d ~/exprob_ws ]]; then
     echo -e "${YELLOW}Workspace does not exist. Creating new workspace...${NC}"
-    mkdir -p ~/ros_ws/src
+    mkdir -p ~/exprob_ws/src
 else
     echo -e "${GREEN}Workspace already exists.${NC}"
 fi
 
 # Check if package exists
-if [[ ! -d ~/ros_ws/src/Experimental-Robotics-Project.2022 ]]; then
+if [[ ! -d ~/exprob_ws/src/Experimental-Robotics-Project.2022 ]]; then
     echo -e "${YELLOW}Package does not exist. Cloning package...${NC}"
-    cd ~/ros_ws/src
+    cd ~/exprob_ws/src
     git clone https://github.com/Omotoye/Experimental-Robotics-Project.2022.git
 else
     echo -e "${GREEN}Package already exists.${NC}"
 fi
 
 # Checkout desired branch
-cd ~/ros_ws/src/Experimental-Robotics-Project.2022
+cd ~/exprob_ws/src/Experimental-Robotics-Project.2022
 git checkout $branch
 
 # Build the workspace
 source /opt/ros/noetic/setup.bash
-cd ~/ros_ws/
+cd ~/exprob_ws/
 catkin_make
 
 # Print final message to user
