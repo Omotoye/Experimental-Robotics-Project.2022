@@ -5,7 +5,7 @@
 <h1 align="center"> Experimental Robotics Lab Project 2022 </h1>
 
 >**Author:** *Omotoye Shamsudeen Adekoya*  
->**Email:** *<adekoyaomotoye@gmail.com>* 
+>**Email:** *<adekoyaomotoye@gmail.com>*    
 >**Student ID:** *5066348*
 
 ## Outline
@@ -21,7 +21,7 @@
 3. [System Limitations and Possible Improvements](#limits)
 4. [Project timeline](#timeline)
 
-> **Note**
+> **Note**     
 > _Read the [docs](https://omotoye.github.io/Experimental-Robotics-Project.2022/index.html) for a more comprehensive detail about the [code-base (api)](https://omotoye.github.io/Experimental-Robotics-Project.2022/api.html). You can find everything contained in this readme and more in the docs..._
 
 <a name="intro"></a>
@@ -217,7 +217,7 @@ The ARMOR package is an external package used to communicate with the Cluedo OWL
 
 ## Installation and Running Procedure
 
-> **Warning**
+> **Warning**     
 > The instructions below are meant for packages that are written for **ROS Noetic Ninjemys**.
 
 ## Compile
@@ -267,8 +267,7 @@ catkin_make  # or `catkin build` if you want to use catkin build to compile the 
 
 ### Dependencies
 
-> **Warning**
-> 
+> **Warning**    
 > The dependency installation is **not included** in the installation script, so if you used the installation script you still have to follow the steps below
 
 This project depends on two external packages
@@ -278,7 +277,7 @@ This project depends on two external packages
 
 To install **armor** consult the [armor](https://github.com/EmaroLab/armor) installation repository
 
-> **Note** 
+> **Note**     
 > Follow the instructions in this [issue page](https://github.com/EmaroLab/armor/issues/7) to install `armor` for `noetic devel`
 
 Run the command below to install **smach**
@@ -297,14 +296,14 @@ There are two options to launch this project:
 
 Use the launch script in the working directory of the project with this command below
 
-> **Warning**
+> **Warning**     
 > If you didn't use the installation script or didnt use the workspace name as prescribed in the instruction, this script wont work*
 
 ```bash
 ~/exprob_ws/src/Experimental-Robotics-Project.2022/launch_exprob.sh 
 ```
 
-> **Note**
+> **Note**      
 > It is generally not good practise to using shell script to run `ros package`, since it defeats the essence of `launch files`, however in this case where we need to launch different terminal applications, an argument can be made in it's defence
 
 **Option 2:** 
@@ -317,7 +316,7 @@ Step 1: Open two terminal and source the `setup.bash` file in the both of them, 
 source ~/exprob_ws/devel/setup.bash
 ```
 
-> **Note**
+> **Note**     
 > If you didn't follow the initial steps because you already have a workspace, trace a path from your home directory to your catkin workspace down to your setup.bash file. An example is shown below, ***THIS WILL NOT WORK FOR YOU, IT IS JUST AN EXAMPLE TO SHOW HOW IT CAN BE DONE***
 
 ```bash
