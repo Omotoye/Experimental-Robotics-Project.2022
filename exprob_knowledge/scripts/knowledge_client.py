@@ -251,6 +251,8 @@ class KnowledgeManager:
             req.id = int(float(_id))
             # print(f"Type: {type(_id)}, ID: {_id}")
             response = my_service(req)
+            if len(response.room) > 2:
+                continue
             connected_doors = [] 
             for connection in response.connections:
                 connected_doors.append(connection.through_door)
@@ -312,6 +314,9 @@ class KnowledgeManager:
             ):
                 self._update_current_timestamp()
                 self.response.result = "updated"
+        else:
+            print("The topological map is not available")
+            time.sleep(5)
 
     def _get_reachable_locations(self) -> ReachableLocations:
         """Gets the reachable locations by the robot based on it's current location

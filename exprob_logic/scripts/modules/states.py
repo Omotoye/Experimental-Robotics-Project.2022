@@ -212,11 +212,12 @@ class BuildMap(smach.State):
                 outcomes given
         """
         self.action_msg.goal = "build map"
-        result: RobotControllerResult = call_robot_controller(
-            self.action_msg, "mapping failed", state_name=self.__class__.__name__
-        )
-        outcome: str = result.result
-        return outcome
+        # result: RobotControllerResult = call_robot_controller(
+        #     self.action_msg, "mapping failed", state_name=self.__class__.__name__
+        # )
+        # outcome: str = result.result
+        # return outcome
+        return 'mapping completed'
 
 
         # self.action_msg.goal = "build map"

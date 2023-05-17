@@ -23,7 +23,7 @@ class Detector:
         )
         self.marker_ids = set()
         # self.marker_ids = [11, 12, 13, 14, 15, 16, 17]
-        rospy.Subscriber('/aruco_marker_publisher/markers', Float32MultiArray, self._marker_id_clbk)
+        rospy.Subscriber('/marker_publisher/markers', Float32MultiArray, self._marker_id_clbk)
         
         self._detect()
         self._get_id_info()
@@ -74,6 +74,8 @@ class Detector:
             req.id = int(float(_id))
             # print(f"Type: {type(_id)}, ID: {_id}")
             response = my_service(req)
+            if len(response.room) > 2:
+                continue
             connected_doors = [] 
             for connection in response.connections:
                 connected_doors.append(connection.through_door)
